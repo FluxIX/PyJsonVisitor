@@ -305,6 +305,9 @@ class CompositeAdapter( BaseAdapter ):
     def before_member_key( self, name: str ) -> None:
         """
         Callback invoked before processing the member key.
+        
+        Parameters:
+            `name`: The member key.
         """
 
         for adapter in self._adapters:
@@ -313,6 +316,9 @@ class CompositeAdapter( BaseAdapter ):
     def process_member_key( self, name: str ) -> None:
         """
         Callback invoked when processing the member key.
+        
+        Parameters:
+            `name`: The member key.
         """
 
         for adapter in self._adapters:
@@ -321,6 +327,9 @@ class CompositeAdapter( BaseAdapter ):
     def after_member_key( self, name: str ) -> None:
         """
         Callback invoked after processing the member key.
+        
+        Parameters:
+            `name`: The member key.
         """
 
         for adapter in self._adapters:
@@ -377,6 +386,9 @@ class CompositeAdapter( BaseAdapter ):
     def before_value( self, value: Any ) -> None:
         """
         Callback invoked before processing the value.
+
+        Parameters:
+            `value`: the value being processed.
         """
 
         for adapter in self._adapters:
@@ -385,6 +397,9 @@ class CompositeAdapter( BaseAdapter ):
     def process_value( self, value: Any ) -> None:
         """
         Callback invoked when processing the value.
+
+        Parameters:
+            `value`: the value being processed.
         """
 
         for adapter in self._adapters:
@@ -393,6 +408,9 @@ class CompositeAdapter( BaseAdapter ):
     def after_value( self, value: Any ) -> None:
         """
         Callback invoked after processing the value.
+
+        Parameters:
+            `value`: the value being processed.
         """
 
         for adapter in self._adapters:
@@ -401,6 +419,9 @@ class CompositeAdapter( BaseAdapter ):
     def before_document( self, root_scope: RootScope ) -> None:
         """
         Callback invoked before processing the document.
+
+        Parameters:
+            `root_scope`: the root scope for the document.
         """
 
         for adapter in self._adapters:
@@ -409,6 +430,9 @@ class CompositeAdapter( BaseAdapter ):
     def process_document( self, root_scope: RootScope ) -> None:
         """
         Callback invoked when processing the document.
+
+        Parameters:
+            `root_scope`: the root scope for the document.
         """
 
         for adapter in self._adapters:
@@ -417,6 +441,9 @@ class CompositeAdapter( BaseAdapter ):
     def after_document( self, root_scope: RootScope ) -> None:
         """
         Callback invoked after processing the document.
+
+        Parameters:
+            `root_scope`: the root scope for the document.
         """
 
         for adapter in self._adapters:
@@ -425,6 +452,9 @@ class CompositeAdapter( BaseAdapter ):
     def before_object( self, members: Iterable[ Tuple[ str, Any ] ] ) -> None:
         """
         Callback invoked before processing an object.
+        
+        Parameters:
+            `members`: Iterable of tuples of string and value containing the object member data.
         """
 
         for adapter in self._adapters:
@@ -433,6 +463,9 @@ class CompositeAdapter( BaseAdapter ):
     def process_object( self, members: Iterable[ Tuple[ str, Any ] ] ) -> None:
         """
         Callback invoked when processing an object.
+        
+        Parameters:
+            `members`: Iterable of tuples of string and value containing the object member data.
         """
 
         for adapter in self._adapters:
@@ -441,6 +474,9 @@ class CompositeAdapter( BaseAdapter ):
     def after_object( self, members: Iterable[ Tuple[ str, Any ] ] ) -> None:
         """
         Callback invoked after processing an object.
+        
+        Parameters:
+            `members`: Iterable of tuples of string and value containing the object member data.
         """
 
         for adapter in self._adapters:
@@ -449,6 +485,10 @@ class CompositeAdapter( BaseAdapter ):
     def before_member( self, name: str, value: Any ) -> None:
         """
         Callback invoked before processing an object member.
+
+        Parameters:
+            `name`: name of the member.
+            `value`: value of the member.
         """
 
         for adapter in self._adapters:
@@ -457,6 +497,10 @@ class CompositeAdapter( BaseAdapter ):
     def process_member( self, name: str, value: Any ) -> None:
         """
         Callback invoked when processing an object member.
+
+        Parameters:
+            `name`: name of the member.
+            `value`: value of the member.
         """
 
         for adapter in self._adapters:
@@ -465,6 +509,10 @@ class CompositeAdapter( BaseAdapter ):
     def after_member( self, name: str, value: Any ) -> None:
         """
         Callback invoked after processing an object member.
+
+        Parameters:
+            `name`: name of the member.
+            `value`: value of the member.
         """
 
         for adapter in self._adapters:
@@ -473,6 +521,9 @@ class CompositeAdapter( BaseAdapter ):
     def before_list( self, items: Iterable[ Any ] ) -> None:
         """
         Callback invoked before processing a list.
+        
+        Parameters:
+            `items`: Iterable of the list items.
         """
 
         for adapter in self._adapters:
@@ -481,6 +532,9 @@ class CompositeAdapter( BaseAdapter ):
     def process_list( self, items: Iterable[ Any ] ) -> None:
         """
         Callback invoked when processing a list.
+        
+        Parameters:
+            `items`: Iterable of the list items.
         """
 
         for adapter in self._adapters:
@@ -489,6 +543,9 @@ class CompositeAdapter( BaseAdapter ):
     def after_list( self, items: Iterable[ Any ] ) -> None:
         """
         Callback invoked after processing a list.
+        
+        Parameters:
+            `items`: Iterable of the list items.
         """
 
         for adapter in self._adapters:
@@ -497,6 +554,10 @@ class CompositeAdapter( BaseAdapter ):
     def before_list_item( self, index_: int, value: Any ) -> None:
         """
         Callback invoked before processing a list item.
+        
+        Parameters:
+            `index_`: list index of the list item.
+            `value`: value of the item item.
         """
 
         for adapter in self._adapters:
@@ -505,6 +566,10 @@ class CompositeAdapter( BaseAdapter ):
     def process_list_item( self, index_: int, value: Any ) -> None:
         """
         Callback invoked when processing a list item.
+        
+        Parameters:
+            `index_`: list index of the list item.
+            `value`: value of the item item.
         """
 
         for adapter in self._adapters:
@@ -513,6 +578,10 @@ class CompositeAdapter( BaseAdapter ):
     def after_list_item( self, index_: int, value: Any ) -> None:
         """
         Callback invoked after processing a list item.
+        
+        Parameters:
+            `index_`: list index of the list item.
+            `value`: value of the item item.
         """
 
         for adapter in self._adapters:

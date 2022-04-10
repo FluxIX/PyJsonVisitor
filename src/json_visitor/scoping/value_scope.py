@@ -42,9 +42,20 @@ class ValueScope( Scope ):
 
     @property
     def has_value( self ) -> bool:
+        """
+        Indicates if the scope value has been set.
+        
+        Returns:
+            `True` if the scope value has been set, `False` otherwise.
+        """
+
         return self._has_value
 
     def clear_value( self ) -> None:
+        """
+        Clears the scope value.
+        """
+
         self.set_value( None, is_initial_value = False )
 
     def _get_repr_param_strings( self ) -> List[ str ]:

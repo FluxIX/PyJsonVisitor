@@ -78,6 +78,9 @@ class BaseAdapter( ScopeAdapter ):
     def before_document( self, root_scope: RootScope ) -> None:
         """
         Callback invoked before processing the document.
+
+        Parameters:
+            `root_scope`: the root scope for the document.
         """
 
         self.default_before( root_scope )
@@ -85,6 +88,9 @@ class BaseAdapter( ScopeAdapter ):
     def process_document( self, root_scope: RootScope ) -> None:
         """
         Callback invoked when processing the document.
+
+        Parameters:
+            `root_scope`: the root scope for the document.
         """
 
         self.default_process( root_scope )
@@ -92,6 +98,9 @@ class BaseAdapter( ScopeAdapter ):
     def after_document( self, root_scope: RootScope ) -> None:
         """
         Callback invoked after processing the document.
+
+        Parameters:
+            `root_scope`: the root scope for the document.
         """
 
         self.default_after( root_scope )
@@ -99,6 +108,9 @@ class BaseAdapter( ScopeAdapter ):
     def before_object( self, members: Iterable[ Tuple[ str, Any ] ] ) -> None:
         """
         Callback invoked before processing an object.
+        
+        Parameters:
+            `members`: Iterable of tuples of string and value containing the object member data.
         """
 
         self.default_process( members )
@@ -106,6 +118,9 @@ class BaseAdapter( ScopeAdapter ):
     def process_object( self, members: Iterable[ Tuple[ str, Any ] ] ) -> None:
         """
         Callback invoked when processing an object.
+        
+        Parameters:
+            `members`: Iterable of tuples of string and value containing the object member data.
         """
 
         self.default_process( members )
@@ -113,6 +128,9 @@ class BaseAdapter( ScopeAdapter ):
     def after_object( self, members: Iterable[ Tuple[ str, Any ] ] ) -> None:
         """
         Callback invoked after processing an object.
+        
+        Parameters:
+            `members`: Iterable of tuples of string and value containing the object member data.
         """
 
         self.default_process( members )
@@ -120,6 +138,10 @@ class BaseAdapter( ScopeAdapter ):
     def before_member( self, name: str, value: Any ) -> None:
         """
         Callback invoked before processing an object member.
+
+        Parameters:
+            `name`: name of the member.
+            `value`: value of the member.
         """
 
         self.default_process( name, value )
@@ -127,6 +149,10 @@ class BaseAdapter( ScopeAdapter ):
     def process_member( self, name: str, value: Any ) -> None:
         """
         Callback invoked when processing an object member.
+
+        Parameters:
+            `name`: name of the member.
+            `value`: value of the member.
         """
 
         self.default_process( name, value )
@@ -134,6 +160,10 @@ class BaseAdapter( ScopeAdapter ):
     def after_member( self, name: str, value: Any ) -> None:
         """
         Callback invoked after processing an object member.
+
+        Parameters:
+            `name`: name of the member.
+            `value`: value of the member.
         """
 
         self.default_process( name, value )
@@ -141,6 +171,9 @@ class BaseAdapter( ScopeAdapter ):
     def before_list( self, items: Iterable[ Any ] ) -> None:
         """
         Callback invoked before processing a list.
+        
+        Parameters:
+            `items`: Iterable of the list items.
         """
 
         self.default_process( items )
@@ -148,6 +181,9 @@ class BaseAdapter( ScopeAdapter ):
     def process_list( self, items: Iterable[ Any ] ) -> None:
         """
         Callback invoked when processing a list.
+        
+        Parameters:
+            `items`: Iterable of the list items.
         """
 
         self.default_process( items )
@@ -155,6 +191,9 @@ class BaseAdapter( ScopeAdapter ):
     def after_list( self, items: Iterable[ Any ] ) -> None:
         """
         Callback invoked after processing a list.
+        
+        Parameters:
+            `items`: Iterable of the list items.
         """
 
         self.default_process( items )
@@ -162,6 +201,10 @@ class BaseAdapter( ScopeAdapter ):
     def before_list_item( self, index_: int, value: Any ) -> None:
         """
         Callback invoked before processing a list item.
+        
+        Parameters:
+            `index_`: list index of the list item.
+            `value`: value of the item item.
         """
 
         self.default_process( index_, value )
@@ -169,6 +212,10 @@ class BaseAdapter( ScopeAdapter ):
     def process_list_item( self, index_: int, value: Any ) -> None:
         """
         Callback invoked when processing a list item.
+        
+        Parameters:
+            `index_`: list index of the list item.
+            `value`: value of the item item.
         """
 
         self.default_process( index_, value )
@@ -176,6 +223,10 @@ class BaseAdapter( ScopeAdapter ):
     def after_list_item( self, index_: int, value: Any ) -> None:
         """
         Callback invoked after processing a list item.
+        
+        Parameters:
+            `index_`: list index of the list item.
+            `value`: value of the item item.
         """
 
         self.default_process( index_, value )

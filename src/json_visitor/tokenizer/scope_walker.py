@@ -41,6 +41,13 @@ class ScopeWalker( object ):
 
     @property
     def current_scope_type( self ) -> ScopeTypes:
+        """
+        Gets the current scope type.
+        
+        Returns:
+            The current scope type. If there is no current scope, `None` is returned.
+        """
+
         return self._scope_stack[ -1 ] if len( self._scope_stack ) > 0 else None
 
     def process_document_start( self ) -> None:

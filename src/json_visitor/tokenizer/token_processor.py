@@ -1,9 +1,13 @@
 from typing import Any, Dict, Callable, TextIO, Union
+import ijson
 from io import StringIO
 from .scope_walker import ScopeWalker
-import ijson
 
 class TokenProcessor( object ):
+    """
+    Implements a JSON tokenizer and uses the tokens to publish events through the Visitor interface.
+    """
+
     def __init__( self, scope_walker: ScopeWalker ):
         self._internal_scope_walker: ScopeWalker = scope_walker
 
@@ -30,15 +34,13 @@ class TokenProcessor( object ):
 
         return self._internal_scope_walker
 
-    def process( self, input_source: Union[ TextIO, str ], **kwargs: Dict[ str, Any ] ) -> None:
+    def process( self, input_source: Union[ TextIO, str ] ) -> None:
         """
         Tokenizes the input and processes the tokens, pushing the walk sequence through the adapters in the scope walker.
-        
+
         Parameters:
             `input_source`: text file-object or string containing the input to process.
-            
-        Keyword Arguments:
-            
+
         Returns:
             None
         """

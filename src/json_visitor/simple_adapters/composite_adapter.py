@@ -301,25 +301,34 @@ class CompositeAdapter( BaseAdapter ):
         for adapter in self._adapters:
             adapter.after_member_end()
 
-    def before_member_key( self, name : str ) -> None:
+    def before_member_key( self, name: str ) -> None:
         """
         Callback invoked before processing the member key.
+        
+        Parameters:
+            `name`: The member key.
         """
 
         for adapter in self._adapters:
             adapter.before_member_key( name )
 
-    def process_member_key( self, name : str ) -> None:
+    def process_member_key( self, name: str ) -> None:
         """
         Callback invoked when processing the member key.
+        
+        Parameters:
+            `name`: The member key.
         """
 
         for adapter in self._adapters:
             adapter.process_member_key( name )
 
-    def after_member_key( self, name : str ) -> None:
+    def after_member_key( self, name: str ) -> None:
         """
         Callback invoked after processing the member key.
+        
+        Parameters:
+            `name`: The member key.
         """
 
         for adapter in self._adapters:
@@ -373,27 +382,35 @@ class CompositeAdapter( BaseAdapter ):
         for adapter in self._adapters:
             adapter.after_member_value_end()
 
-    def before_value( self, value : Any ) -> None:
+    def before_value( self, value: Any ) -> None:
         """
         Callback invoked before processing the value.
+
+        Parameters:
+            `value`: the value being processed.
         """
 
         for adapter in self._adapters:
             adapter.before_value( value )
 
-    def process_value( self, value : Any ) -> None:
+    def process_value( self, value: Any ) -> None:
         """
         Callback invoked when processing the value.
+
+        Parameters:
+            `value`: the value being processed.
         """
 
         for adapter in self._adapters:
             adapter.process_value( value )
 
-    def after_value( self, value : Any ) -> None:
+    def after_value( self, value: Any ) -> None:
         """
         Callback invoked after processing the value.
+
+        Parameters:
+            `value`: the value being processed.
         """
 
         for adapter in self._adapters:
             adapter.after_value( value )
-

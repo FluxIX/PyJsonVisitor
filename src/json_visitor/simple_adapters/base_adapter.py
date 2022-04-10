@@ -283,6 +283,9 @@ class BaseAdapter( object ):
     def before_member_key( self, name: str ) -> None:
         """
         Callback invoked before processing the member key.
+        
+        Parameters:
+            `name`: The member key.
         """
 
         self.default_before( name )
@@ -290,6 +293,9 @@ class BaseAdapter( object ):
     def process_member_key( self, name: str ) -> None:
         """
         Callback invoked when processing the member key.
+        
+        Parameters:
+            `name`: The member key.
         """
 
         self.default_process( name )
@@ -297,6 +303,9 @@ class BaseAdapter( object ):
     def after_member_key( self, name: str ) -> None:
         """
         Callback invoked after processing the member key.
+        
+        Parameters:
+            `name`: The member key.
         """
 
         self.default_after( name )
@@ -346,6 +355,9 @@ class BaseAdapter( object ):
     def before_value( self, value: Any ) -> None:
         """
         Callback invoked before processing the value.
+
+        Parameters:
+            `value`: the value being processed.
         """
 
         self.default_before( value )
@@ -353,6 +365,9 @@ class BaseAdapter( object ):
     def process_value( self, value: Any ) -> None:
         """
         Callback invoked when processing the value.
+
+        Parameters:
+            `value`: the value being processed.
         """
 
         self.default_process( value )
@@ -360,7 +375,9 @@ class BaseAdapter( object ):
     def after_value( self, value: Any ) -> None:
         """
         Callback invoked after processing the value.
+
+        Parameters:
+            `value`: the value being processed.
         """
 
         self.default_after( value )
-

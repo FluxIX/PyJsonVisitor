@@ -45,6 +45,9 @@ class ScopeAdapter( BaseAdapter ):
     def root_scope( self ) -> RootScope:
         """
         Gets the root scope.
+        
+        Returns:
+            The root scope.
         """
 
         return self._root
@@ -91,21 +94,37 @@ class ScopeAdapter( BaseAdapter ):
             return result
 
     def before_document_start( self ) -> None:
+        """
+        Callback invoked before processing the start of the document.
+        """
+
         super().before_document_start()
 
         self._push_scope( RootScope() )
 
     def after_document_end( self ) -> None:
+        """
+        Callback invoked after processing the end of the document.
+        """
+
         super().after_document_end()
 
         self._pop_scope()
 
     def before_object_start( self ) -> None:
+        """
+        Callback invoked before processing the start of an object.
+        """
+
         super().before_object_start()
 
         self._push_scope( ObjectScope() )
 
     def after_object_end( self ) -> None:
+        """
+        Callback invoked after processing the end of an object.
+        """
+
         super().after_object_end()
 
         self._values.append( self.current_scope.get_value() )
@@ -113,6 +132,10 @@ class ScopeAdapter( BaseAdapter ):
         self._pop_scope()
 
     def before_member_start( self ) -> None:
+        """
+        Callback invoked before processing the start of a member.
+        """
+
         super().before_member_start()
 
         scope = MemberScope()
@@ -121,11 +144,22 @@ class ScopeAdapter( BaseAdapter ):
         self._push_scope( scope )
 
     def after_member_end( self ) -> None:
+        """
+        Callback invoked after processing the end of a member.
+        """
+
         super().after_member_end()
 
         self._pop_scope()
 
     def before_member_key( self, name: str ) -> None:
+        """
+        Callback invoked before processing the member key.
+        
+        Parameters:
+            `name`: The member key.
+        """
+
         super().before_member_key( name )
 
         scope = MemberNameScope( name )
@@ -134,11 +168,22 @@ class ScopeAdapter( BaseAdapter ):
         self._push_scope( scope )
 
     def after_member_key( self, name: str ) -> None:
+        """
+        Callback invoked after processing the member key.
+        
+        Parameters:
+            `name`: The member key.
+        """
+
         super().after_member_key( name )
 
         self._pop_scope()
 
     def before_member_value_start( self ) -> None:
+        """
+        Callback invoked before processing the start of a member value.
+        """
+
         super().before_member_value_start()
 
         scope = MemberValueScope( is_initial_value = True )
@@ -147,6 +192,10 @@ class ScopeAdapter( BaseAdapter ):
         self._push_scope( scope )
 
     def after_member_value_end( self ) -> None:
+        """
+        Callback invoked after processing the end of a member value.
+        """
+
         super().after_member_value_end()
 
         self.current_scope.set_value( self._values.pop() )
@@ -154,6 +203,10 @@ class ScopeAdapter( BaseAdapter ):
         self._pop_scope()
 
     def before_list_start( self ) -> None:
+        """
+        Callback invoked before processing the start of a list.
+        """
+
         super().before_list_start()
 
         scope = ListScope()
@@ -164,6 +217,10 @@ class ScopeAdapter( BaseAdapter ):
         self._list_item_scopes_stack.append( [] )
 
     def after_list_end( self ) -> None:
+        """
+        Callback invoked after processing the end of a list.
+        """
+
         self.current_scope._item_scopes = self._list_item_scopes_stack.pop()
 
         super().after_list_end()
@@ -173,6 +230,10 @@ class ScopeAdapter( BaseAdapter ):
         self._pop_scope()
 
     def before_list_item_start( self ) -> None:
+        """
+        Callback invoked before processing the start of a list item.
+        """
+
         super().before_list_item_start()
 
         scope = ListItemScope( item_index = len( self.current_scope.get_value() ) )
@@ -182,11 +243,19 @@ class ScopeAdapter( BaseAdapter ):
         self._list_item_scopes_stack[ -1 ].append( scope )
 
     def after_list_item_end( self ) -> None:
+        """
+        Callback invoked after processing the end of a list item.
+        """
+
         super().after_list_item_end()
 
         self._pop_scope()
 
     def before_list_item_value_start( self ) -> None:
+        """
+        Callback invoked before processing the start of a list item value.
+        """
+
         super().before_list_item_value_start()
 
         scope = ListItemValueScope( is_initial_value = True )
@@ -195,6 +264,10 @@ class ScopeAdapter( BaseAdapter ):
         self._push_scope( scope )
 
     def after_list_item_value_end( self ) -> None:
+        """
+        Callback invoked after processing the end of a list item value.
+        """
+
         super().after_list_item_value_end()
 
         self.current_scope.set_value( self._values.pop() )
@@ -202,6 +275,13 @@ class ScopeAdapter( BaseAdapter ):
         self._pop_scope()
 
     def process_value( self, value: Any ) -> None:
+        """
+        Callback invoked when processing the value.
+
+        Parameters:
+            `value`: the value being processed.
+        """
+
         super().process_value( value )
 
         if self.current_scope.is_root:

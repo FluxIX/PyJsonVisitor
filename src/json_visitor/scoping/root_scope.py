@@ -36,6 +36,9 @@ class RootScope( Scope ):
     def get_value( self ) -> Any:
         """
         Gets the evaluated value of the current scope.
+
+        Returns:
+            The evaluated value of the current scope.
         """
 
         if self.has_child_scope:

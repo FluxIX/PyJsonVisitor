@@ -50,7 +50,16 @@ def _build_argument_parser( file_relative_path: Union[ Path, str ] = None ):
 
 def main( args = None ) -> int:
     """
-    A JSON visitor driver which will print the scoping events of the strings specified on the 
+    A JSON visitor driver which will print the scoping events of the strings specified on the strings or files.
+    
+    Parameters:
+        `args`: input parameters to parse. If `None`, parameters are read from `sys.stdin`.
+    
+    Returns:
+        Integer representing the error code.
+        0: No error.
+        1. No input source provided.
+        2. Error processing one or more of the input sources.
     """
 
     if args is None:
