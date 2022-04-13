@@ -7,21 +7,21 @@ class BaseAdapter( object ):
     This adapter does not track scope to implement low-level callbacks.
     """
 
-    def default_before( self, *args: Iterable[ Any ] ) -> None:
+    def default_before( self, *args: Iterable[ Any ], **kwargs: Dict[ str, Any ] ) -> None:
         """
         Default callback invoked when before processing a node.
         """
 
         pass
 
-    def default_process( self, *args: Iterable[ Any ] ) -> None:
+    def default_process( self, *args: Iterable[ Any ], **kwargs: Dict[ str, Any ] ) -> None:
         """
         Default callback invoked when processing a node.
         """
 
         pass
 
-    def default_after( self, *args: Iterable[ Any ] ) -> None:
+    def default_after( self, *args: Iterable[ Any ], **kwargs: Dict[ str, Any ] ) -> None:
         """
         Default callback invoked when after processing a node.
         """
