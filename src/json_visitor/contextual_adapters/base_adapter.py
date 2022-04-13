@@ -11,6 +11,7 @@ class BaseAdapter( ScopeAdapter ):
 
     def __init__( self ):
         super().__init__()
+        self._persistent_data = True
 
     def after_document_end( self ) -> None:
         """

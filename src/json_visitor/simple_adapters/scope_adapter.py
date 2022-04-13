@@ -19,6 +19,8 @@ class ScopeAdapter( BaseAdapter ):
     def __init__( self ):
         super().__init__()
 
+        self._persistent_data: bool = False
+
         self.current_scope: Scope = None
         self._root: RootScope = None
 
@@ -127,7 +129,8 @@ class ScopeAdapter( BaseAdapter ):
 
         super().after_object_end()
 
-        self._values.append( self.current_scope.get_value() )
+        if self._persistent_data:
+            self._values.append( self.current_scope.get_value() )
 
         self._pop_scope()
 
@@ -198,7 +201,8 @@ class ScopeAdapter( BaseAdapter ):
 
         super().after_member_value_end()
 
-        self.current_scope.set_value( self._values.pop() )
+        if self._persistent_data:
+            self.current_scope.set_value( self._values.pop() )
 
         self._pop_scope()
 
@@ -225,7 +229,8 @@ class ScopeAdapter( BaseAdapter ):
 
         super().after_list_end()
 
-        self._values.append( self.current_scope.get_value() )
+        if self._persistent_data:
+            self._values.append( self.current_scope.get_value() )
 
         self._pop_scope()
 
@@ -270,7 +275,8 @@ class ScopeAdapter( BaseAdapter ):
 
         super().after_list_item_value_end()
 
-        self.current_scope.set_value( self._values.pop() )
+        if self._persistent_data:
+            self.current_scope.set_value( self._values.pop() )
 
         self._pop_scope()
 
@@ -288,5 +294,5 @@ class ScopeAdapter( BaseAdapter ):
             # A value with a root scope as the parent indicates the JSON string does is a value, not a list or object.
             # Since a ValueScope can't have any children, no popping of the scope will be done.
             self._push_scope( ValueScope( initial_value = value ) )
-        else:
+        elif self._persistent_data:
             self._values.append( value )
