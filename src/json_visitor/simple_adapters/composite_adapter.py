@@ -9,7 +9,7 @@ class CompositeAdapter( BaseAdapter ):
     def __init__( self, *adapters: Iterable[ BaseAdapter ] ):
         for adapter in adapters:
             if not isinstance( adapter, BaseAdapter ):
-                raise ValueError( f"Invalid adapter '{ adapter.__qualname__ }': it must be a child of { BaseAdapter.__qualname__ }" )
+                raise ValueError( f"Invalid adapter '{ adapter.__class__.__qualname__ }': it must be a child of { BaseAdapter.__qualname__ }" )
 
         self._adapters: Tuple[ BaseAdapter ] = tuple( adapters )
 
