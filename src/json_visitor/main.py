@@ -7,6 +7,7 @@ from . import __name__ as PackageName
 from .contextual_adapters.composite_adapter import CompositeAdapter
 from .contextual_adapters.inspector_adapter import InspectionAdapter
 from .json_visitor import JsonVisitor
+from numpy import isin
 
 class _ExpandedFileType( FileType ):
     def __init__( self, **kwargs: Dict[ str, Any ] ):
@@ -25,10 +26,10 @@ class _ExpandedFileType( FileType ):
         self._relative_path: Path = relative_path
 
     def __call__( self, string ):
-        if string != "-":
-            string = self._relative_path
+        if string != "-" and not os.path.isabs( string ):
+            string = self._relative_path.joinpath( string ).resolve( True )
 
-        return super().__call__( self, string )
+        return super().__call__( string )
 
     def __repr__( self ):
         # Adapted from: argparse.py's FileType.__repr__ implementation
