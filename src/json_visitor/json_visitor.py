@@ -20,7 +20,7 @@ class JsonVisitor( object ):
 
         self._token_processor = TokenProcessor( ScopeWalker( self._target_adapter ) )
 
-    def walk( self, input_source: Union[ TextIO, str ] ) -> None:
+    def visit( self, input_source: Union[ TextIO, str ] ) -> None:
         """
         Walks the JSON input source.
 

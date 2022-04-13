@@ -79,7 +79,7 @@ def main( args = None ) -> int:
             ]
 
             try:
-                JsonVisitor( CompositeAdapter( *adapters ) ).walk( input_ )
+                JsonVisitor( CompositeAdapter( *adapters ) ).visit( input_ )
             except Exception as e:
                 print( f"Error executing commands from '{ input_ }': { e }", file = sys.stderr )
                 error_code = 2
