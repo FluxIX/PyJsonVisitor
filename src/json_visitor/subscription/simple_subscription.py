@@ -1,4 +1,7 @@
+__version__ = r"1.0.0"
+
 from typing import Any, Callable, Dict, Iterable, List, FrozenSet
+
 from EventNotifier import Notifier
 from ..simple_adapters.base_adapter import BaseAdapter
 

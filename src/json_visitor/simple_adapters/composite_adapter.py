@@ -1,4 +1,7 @@
+__version__ = r"1.0.0"
+
 from typing import Any, Iterable, Tuple
+
 from .base_adapter import BaseAdapter
 
 class CompositeAdapter( BaseAdapter ):

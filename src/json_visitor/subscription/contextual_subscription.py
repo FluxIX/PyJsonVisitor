@@ -1,4 +1,7 @@
+__version__ = r"1.0.0"
+
 from typing import Any, Iterable, List, Tuple
+
 from ..scoping.root_scope import RootScope
 from .simple_subscription import SimpleSubscription
 from ..contextual_adapters.base_adapter import BaseAdapter

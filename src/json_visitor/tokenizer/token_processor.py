@@ -1,4 +1,7 @@
+__version__ = r"1.0.0"
+
 from typing import Any, Dict, Callable, TextIO, Union
+
 import ijson
 from io import StringIO
 from .scope_walker import ScopeWalker

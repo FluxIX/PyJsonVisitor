@@ -1,4 +1,7 @@
+__version__ = r"1.0.0"
+
 from typing import Any, Iterable, List, Tuple
+
 from .scope import Scope
 from .list_item_scope import ListItemScope
 

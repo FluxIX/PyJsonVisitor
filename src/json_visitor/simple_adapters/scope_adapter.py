@@ -1,4 +1,7 @@
+__version__ = r"1.0.0"
+
 from typing import Any, List
+
 from ..scoping.scope import Scope
 from ..scoping.root_scope import RootScope
 from ..scoping.value_scope import ValueScope

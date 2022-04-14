@@ -1,3 +1,5 @@
+__version__ = r"1.0.0"
+
 from typing import Union, TextIO
 
 from .simple_adapters.base_adapter import BaseAdapter as SimpleBaseAdapter

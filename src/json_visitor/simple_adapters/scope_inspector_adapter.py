@@ -1,4 +1,7 @@
+__version__ = r"1.0.0"
+
 from typing import Any, Iterable
+
 from .scope_adapter import ScopeAdapter
 
 class ScopeInspectionAdapter( ScopeAdapter ):

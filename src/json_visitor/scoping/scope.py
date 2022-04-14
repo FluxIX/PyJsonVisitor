@@ -1,3 +1,5 @@
+__version__ = r"1.0.0"
+
 from typing import Any, Dict, Iterable, List
 
 class Scope( object ):

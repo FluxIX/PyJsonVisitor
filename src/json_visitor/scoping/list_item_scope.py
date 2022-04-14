@@ -1,4 +1,7 @@
+__version__ = r"1.0.0"
+
 from typing import Any, Dict, List
+
 from .scope import Scope
 from .list_item_value_scope import ListItemValueScope
 

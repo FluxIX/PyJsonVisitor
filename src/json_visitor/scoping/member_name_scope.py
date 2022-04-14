@@ -1,4 +1,7 @@
+__version__ = r"1.0.0"
+
 from typing import Any, List
+
 from .scope import Scope
 
 class MemberNameScope( Scope ):
