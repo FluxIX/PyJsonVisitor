@@ -1,4 +1,4 @@
-from typing import Any, Dict, Union
+from typing import Any, Dict, Iterable, Union
 import os
 import sys
 from argparse import ArgumentParser, FileType, Namespace
@@ -6,8 +6,8 @@ from pathlib import Path
 from . import __name__ as PackageName
 from .contextual_adapters.composite_adapter import CompositeAdapter
 from .contextual_adapters.inspector_adapter import InspectionAdapter
+from .subscription.contextual_subscription import ContextualSubscription
 from .json_visitor import JsonVisitor
-from numpy import isin
 
 class _ExpandedFileType( FileType ):
     def __init__( self, **kwargs: Dict[ str, Any ] ):
@@ -44,6 +44,11 @@ class _ExpandedFileType( FileType ):
 def _build_argument_parser( file_relative_path: Union[ Path, str ] = None ):
     parser: ArgumentParser = ArgumentParser( description = "Processes the input JSON strings or files and outputs the visitation events.", prog = PackageName )
 
+    info_parser = parser.add_mutually_exclusive_group( required = False )
+    info_parser.add_argument( "-i", "--output-processing-info", dest = "info_enabled", action = "store_true", help = "Enables the output of the processing information. This is the default." )
+    info_parser.add_argument( "-I", "--suppress-processing-info", dest = "info_enabled", action = "store_false", help = "Suppresses the output of the processing information." )
+    info_parser.set_defaults( info_enabled = True )
+
     parser.add_argument( "-f", "--file", type = _ExpandedFileType( mode = "r", relative_path = file_relative_path ), dest = "inputs", nargs = 1, action = "extend", help = "JSON file path to process; relative paths are relative to the current working directory.", metavar = "<file path>" )
     parser.add_argument( "-s", "--string", type = str, dest = "inputs", nargs = 1, action = "extend", help = "JSON string literal to process.", metavar = "<string literal>" )
 
@@ -75,8 +80,19 @@ def main( args = None ) -> int:
         error_code = 1
     else:
         for input_ in inputs:
+            subscription: ContextualSubscription = ContextualSubscription()
+
+            count: int = 0
+
+            def increment_count( *args: Iterable[ Any ], **kwargs: Dict[ str, Any ] ) -> None:
+                nonlocal count
+                count += 1
+
+            subscription.register( "default_process", increment_count )
+
             adapters = [
                 InspectionAdapter(),
+                subscription,
             ]
 
             try:
@@ -86,5 +102,8 @@ def main( args = None ) -> int:
                 error_code = 2
             else:
                 error_code = 0
+
+            if processed_args.info_enabled:
+                print( f"Number of scope events processed: { count }" )
 
     return error_code

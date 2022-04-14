@@ -9,6 +9,7 @@ Implements a [JSON](https://en.wikipedia.org/wiki/JSON) parser using the Visitor
 			- [Provided Simple Adapters](#provided-simple-adapters)
 		- [Contextual Adapters](#contextual-adapters)
 			- [Provided Contextual Adapters](#provided-contextual-adapters)
+  - [Subscriptions](#subscriptions)
 	- [Terminal Utility](#terminal-utility)
 1. [Acknowledgements](#acknowledgements)
 
@@ -16,7 +17,7 @@ Implements a [JSON](https://en.wikipedia.org/wiki/JSON) parser using the Visitor
 The [Visitor pattern](https://en.wikipedia.org/wiki/Visitor_pattern) is a structural software pattern which allows the separation of an algorithm from the algorithm's input through the use of contextual event handlers. A `BaseAdapter` class provides the contextual event handlers for different [JSON](https://en.wikipedia.org/wiki/JSON) element types and a child class overrides only the event handlers required by the specific algorithm. Since each adapter is completely independent and a specific algorithm's implementation is separated from the input JSON elements, multiple adapters can process the same JSON element events in parallel without interferrence.
 
 ## Usage
-Normal usage would consist of writing an [adapter](#adapters) derived from a `BaseAdapter` to handle the published events, but a [terminal utility](#terminal-utility) has been provided to expose the event sequence for adapter development.
+Normal usage would consist of writing an [adapter](#adapters) derived from a `BaseAdapter` to handle the published events, although two [subscriptions](#subscriptions) have been provided for external subscriber event publishing and a [terminal utility](#terminal-utility) has been provided to expose the event sequence for adapter development.
 
 ### Adapters
 There are two categories of adapters provided, [simple adapters](#simple-adapters) and [contextual adapters](#contextual-adapters). The primary difference between the simple adapters and the contextual adapters are amount of scope data stored through the iteration: the simple adapters do not store scope data while the contextual adapters store scope data applicable to the scope.
@@ -116,15 +117,26 @@ The event handlers implemented in the `BaseAdapter` classes call a different met
 - The `process_*` event handlers invoke the `default_process( *args, **kwargs )` method.
 - The `after_*` event handlers invoke the `default_after( *args, **kwargs )` method.
 
+#### Subscriptions
+Two subscriptions are provided for event consumption by adapter-external subscribers. Callbacks are registered with the subscription using the `register( subscription_key, callback )` method; valid subscription keys are retrieved using the `subscription_keys` property.
+
+- [`SimpleSubscription`](https://github.com/FluxIX/PyJsonVisitor/blob/main/src/json_visitor/subscription/simple_subscription.py): This subscription publishes the events in the simple [`BaseAdapter`](https://github.com/FluxIX/PyJsonVisitor/blob/main/src/json_visitor/simple_adapters/base_adapter.py).
+- [`ContextualSubscription`](https://github.com/FluxIX/PyJsonVisitor/blob/main/src/json_visitor/subscription/contextual_subscription.py): This subscription publishes the events in the contextual [`BaseAdapter`](https://github.com/FluxIX/PyJsonVisitor/blob/main/src/json_visitor/contextual_adapters/base_adapter.py).
+
 ### Terminal Utility
 If the `json_visitor` package is invoked on the terminal (using `python3 -m json_visitor`), the [`InspectionAdapter`](https://github.com/FluxIX/PyJsonVisitor/blob/main/src/json_visitor/contextual_adapters/inspector_adapter.py) prints out the JSON element nodes in a given input source. The utility's help describes the options and inputs supported:
 
-    usage: json_visitor [-h] [-f <file path>] [-s <string literal>]
-    
+    usage: json_visitor [-h] [-i | -I] [-f <file path>] [-s <string literal>]
+
     Processes the input JSON strings or files and outputs the visitation events.
-    
+
     optional arguments:
       -h, --help            show this help message and exit
+      -i, --output-processing-info
+                            Enables the output of the processing information. This
+                            is the default.
+      -I, --suppress-processing-info
+                            Suppresses the output of the processing information.
       -f <file path>, --file <file path>
                             JSON file path to process; relative paths are relative
                             to the current working directory.
@@ -208,6 +220,7 @@ The command (on Linux) `python3 -m json_visitor -s "{ \"v\": [ 1, 2,3, 4, 5, 6, 
     process_object: (0: {'v': (1, 2, 3, 4, 5, 6, {'key0': 'value', 'key1': {}})})
     document_end
     process_document: (0: {'v': (1, 2, 3, 4, 5, 6, {'key0': 'value', 'key1': {}})})
+    Number of scope events processed: 103
 
 ## Acknowledgements
 The hard work of turning JSON into an event stream is done by the [`ijson`](https://pypi.org/project/ijson/) package, without which the Visitor interface would have been much more challenging to develop.
