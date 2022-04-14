@@ -9,7 +9,7 @@ Implements a [JSON](https://en.wikipedia.org/wiki/JSON) parser using the Visitor
 			- [Provided Simple Adapters](#provided-simple-adapters)
 		- [Contextual Adapters](#contextual-adapters)
 			- [Provided Contextual Adapters](#provided-contextual-adapters)
-  - [Subscriptions](#subscriptions)
+	- [Subscriptions](#subscriptions)
 	- [Terminal Utility](#terminal-utility)
 1. [Acknowledgements](#acknowledgements)
 
