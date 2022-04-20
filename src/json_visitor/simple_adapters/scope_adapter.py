@@ -1,4 +1,4 @@
-__version__ = r"1.0.0"
+__version__ = r"1.0.1"
 
 from typing import Any, List
 
@@ -80,7 +80,7 @@ class ScopeAdapter( BaseAdapter ):
 
     def _pop_scope( self ) -> Scope:
         """
-        Removes the last scope, unlinking it from its parent scope.
+        Removes the last scope, unlinking it from its parent scope if the data is not persistent.
         
         Returns:
             The last scope which was removed.
@@ -89,12 +89,12 @@ class ScopeAdapter( BaseAdapter ):
         if self.current_scope is None:
             raise ValueError( "Error popping scope: there is no scope to pop." )
         else:
-
             result = self.current_scope
 
             self.current_scope = self.current_scope.parent
 
-            result.parent = None
+            if not self._persistent_data:
+                result.parent = None
 
             return result
 
