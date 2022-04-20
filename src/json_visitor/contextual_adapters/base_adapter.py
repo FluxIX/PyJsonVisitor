@@ -1,9 +1,13 @@
-__version__ = r"1.0.0"
+__version__ = r"2.0.0"
 
 from typing import Any, Iterable, Tuple
 
 from ..simple_adapters.scope_adapter import ScopeAdapter
 from ..scoping.root_scope import RootScope
+from ..scoping.object_scope import ObjectScope
+from ..scoping.member_scope import MemberScope
+from ..scoping.list_scope import ListScope
+from ..scoping.list_item_scope import ListItemScope
 
 class BaseAdapter( ScopeAdapter ):
     """
@@ -23,9 +27,11 @@ class BaseAdapter( ScopeAdapter ):
 
         super().after_document_end()
 
-        self.before_document( self.root_scope )
-        self.process_document( self.root_scope )
-        self.after_document( self.root_scope )
+        scope = self.root_scope
+
+        self.before_document( scope, scope.get_value() )
+        self.process_document( scope, scope.get_value() )
+        self.after_document( scope, scope.get_value() )
 
     def after_object_end( self ) -> None:
         """
@@ -36,9 +42,9 @@ class BaseAdapter( ScopeAdapter ):
 
         super().after_object_end()
 
-        self.before_object( scope.get_value() )
-        self.process_object( scope.get_value() )
-        self.after_object( scope.get_value() )
+        self.before_object( scope, scope.get_value() )
+        self.process_object( scope, scope.get_value() )
+        self.after_object( scope, scope.get_value() )
 
     def after_member_end( self ) -> None:
         """
@@ -49,9 +55,9 @@ class BaseAdapter( ScopeAdapter ):
 
         super().after_member_end()
 
-        self.before_member( scope.name_scope.name, scope.value_scope.get_value() )
-        self.process_member( scope.name_scope.name, scope.value_scope.get_value() )
-        self.after_member( scope.name_scope.name, scope.value_scope.get_value() )
+        self.before_member( scope, scope.name_scope.name, scope.value_scope.get_value() )
+        self.process_member( scope, scope.name_scope.name, scope.value_scope.get_value() )
+        self.after_member( scope, scope.name_scope.name, scope.value_scope.get_value() )
 
     def after_list_end( self ) -> None:
         """
@@ -62,9 +68,9 @@ class BaseAdapter( ScopeAdapter ):
 
         super().after_list_end()
 
-        self.before_list( scope.get_value() )
-        self.process_list( scope.get_value() )
-        self.after_list( scope.get_value() )
+        self.before_list( scope, scope.get_value() )
+        self.process_list( scope, scope.get_value() )
+        self.after_list( scope, scope.get_value() )
 
     def after_list_item_end( self ) -> None:
         """
@@ -75,21 +81,22 @@ class BaseAdapter( ScopeAdapter ):
 
         super().after_list_item_end()
 
-        self.before_list_item( scope.item_index, scope.item_value_scope.get_value() )
-        self.process_list_item( scope.item_index, scope.item_value_scope.get_value() )
-        self.after_list_item( scope.item_index, scope.item_value_scope.get_value() )
+        self.before_list_item( scope, scope.item_index, scope.item_value_scope.get_value() )
+        self.process_list_item( scope, scope.item_index, scope.item_value_scope.get_value() )
+        self.after_list_item( scope, scope.item_index, scope.item_value_scope.get_value() )
 
-    def before_document( self, root_scope: RootScope ) -> None:
+    def before_document( self, scope: RootScope, value: Any ) -> None:
         """
         Callback invoked before processing the document.
 
         Parameters:
-            `root_scope`: the root scope for the document.
+            `scope`: the root scope for the document.
+            `value`: the value of the document.
         """
 
-        self.default_before( root_scope )
+        self.default_before( scope, value )
 
-    def process_document( self, root_scope: RootScope ) -> None:
+    def process_document( self, scope: RootScope, value: Any ) -> None:
         """
         Callback invoked when processing the document.
 
@@ -97,9 +104,9 @@ class BaseAdapter( ScopeAdapter ):
             `root_scope`: the root scope for the document.
         """
 
-        self.default_process( root_scope )
+        self.default_process( scope, value )
 
-    def after_document( self, root_scope: RootScope ) -> None:
+    def after_document( self, scope: RootScope, value: Any ) -> None:
         """
         Callback invoked after processing the document.
 
@@ -107,130 +114,142 @@ class BaseAdapter( ScopeAdapter ):
             `root_scope`: the root scope for the document.
         """
 
-        self.default_after( root_scope )
+        self.default_after( scope, value )
 
-    def before_object( self, members: Iterable[ Tuple[ str, Any ] ] ) -> None:
+    def before_object( self, scope: ObjectScope, members: Iterable[ Tuple[ str, Any ] ] ) -> None:
         """
         Callback invoked before processing an object.
         
         Parameters:
+            `scope`: the scope for the object.
             `members`: Iterable of tuples of string and value containing the object member data.
         """
 
-        self.default_process( members )
+        self.default_process( scope, members )
 
-    def process_object( self, members: Iterable[ Tuple[ str, Any ] ] ) -> None:
+    def process_object( self, scope: ObjectScope, members: Iterable[ Tuple[ str, Any ] ] ) -> None:
         """
         Callback invoked when processing an object.
         
         Parameters:
+            `scope`: the scope for the object.
             `members`: Iterable of tuples of string and value containing the object member data.
         """
 
-        self.default_process( members )
+        self.default_process( scope, members )
 
-    def after_object( self, members: Iterable[ Tuple[ str, Any ] ] ) -> None:
+    def after_object( self, scope: ObjectScope, members: Iterable[ Tuple[ str, Any ] ] ) -> None:
         """
         Callback invoked after processing an object.
         
         Parameters:
+            `scope`: the scope for the object.
             `members`: Iterable of tuples of string and value containing the object member data.
         """
 
-        self.default_process( members )
+        self.default_process( scope, members )
 
-    def before_member( self, name: str, value: Any ) -> None:
+    def before_member( self, scope: MemberScope, name: str, value: Any ) -> None:
         """
         Callback invoked before processing an object member.
 
         Parameters:
+            `scope`: the scope for the member.
             `name`: name of the member.
             `value`: value of the member.
         """
 
-        self.default_process( name, value )
+        self.default_process( scope, name, value )
 
-    def process_member( self, name: str, value: Any ) -> None:
+    def process_member( self, scope: MemberScope, name: str, value: Any ) -> None:
         """
         Callback invoked when processing an object member.
 
         Parameters:
+            `scope`: the scope for the member.
             `name`: name of the member.
             `value`: value of the member.
         """
 
-        self.default_process( name, value )
+        self.default_process( scope, name, value )
 
-    def after_member( self, name: str, value: Any ) -> None:
+    def after_member( self, scope: MemberScope, name: str, value: Any ) -> None:
         """
         Callback invoked after processing an object member.
 
         Parameters:
+            `scope`: the scope for the member.
             `name`: name of the member.
             `value`: value of the member.
         """
 
-        self.default_process( name, value )
+        self.default_process( scope, name, value )
 
-    def before_list( self, items: Iterable[ Any ] ) -> None:
+    def before_list( self, scope: ListScope, items: Iterable[ Any ] ) -> None:
         """
         Callback invoked before processing a list.
         
         Parameters:
+            `scope`: the scope for the list.
             `items`: Iterable of the list items.
         """
 
-        self.default_process( items )
+        self.default_process( scope, items )
 
-    def process_list( self, items: Iterable[ Any ] ) -> None:
+    def process_list( self, scope: ListScope, items: Iterable[ Any ] ) -> None:
         """
         Callback invoked when processing a list.
         
         Parameters:
+            `scope`: the scope for the list.
             `items`: Iterable of the list items.
         """
 
-        self.default_process( items )
+        self.default_process( scope, items )
 
-    def after_list( self, items: Iterable[ Any ] ) -> None:
+    def after_list( self, scope: ListScope, items: Iterable[ Any ] ) -> None:
         """
         Callback invoked after processing a list.
         
         Parameters:
+            `scope`: the scope for the list.
             `items`: Iterable of the list items.
         """
 
-        self.default_process( items )
+        self.default_process( scope, items )
 
-    def before_list_item( self, index_: int, value: Any ) -> None:
+    def before_list_item( self, scope: ListItemScope, index_: int, value: Any ) -> None:
         """
         Callback invoked before processing a list item.
         
         Parameters:
+            `scope`: the scope for the list item.
             `index_`: list index of the list item.
             `value`: value of the item item.
         """
 
-        self.default_process( index_, value )
+        self.default_process( scope, index_, value )
 
-    def process_list_item( self, index_: int, value: Any ) -> None:
+    def process_list_item( self, scope: ListItemScope, index_: int, value: Any ) -> None:
         """
         Callback invoked when processing a list item.
         
         Parameters:
+            `scope`: the scope for the list item.
             `index_`: list index of the list item.
             `value`: value of the item item.
         """
 
-        self.default_process( index_, value )
+        self.default_process( scope, index_, value )
 
-    def after_list_item( self, index_: int, value: Any ) -> None:
+    def after_list_item( self, scope: ListItemScope, index_: int, value: Any ) -> None:
         """
         Callback invoked after processing a list item.
         
         Parameters:
+            `scope`: the scope for the list item.
             `index_`: list index of the list item.
             `value`: value of the item item.
         """
 
-        self.default_process( index_, value )
+        self.default_process( scope, index_, value )

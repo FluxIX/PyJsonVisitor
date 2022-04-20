@@ -1,9 +1,13 @@
-__version__ = r"1.0.0"
+__version__ = r"2.0.0"
 
 from typing import Any, Iterable, Tuple
 
 from .base_adapter import BaseAdapter
 from ..scoping.root_scope import RootScope
+from ..scoping.object_scope import ObjectScope
+from ..scoping.member_scope import MemberScope
+from ..scoping.list_scope import ListScope
+from ..scoping.list_item_scope import ListItemScope
 
 class CompositeAdapter( BaseAdapter ):
     """
@@ -419,173 +423,188 @@ class CompositeAdapter( BaseAdapter ):
         for adapter in self._adapters:
             adapter.after_value( value )
 
-    def before_document( self, root_scope: RootScope ) -> None:
+    def before_document( self, scope: RootScope, value: Any ) -> None:
         """
         Callback invoked before processing the document.
 
         Parameters:
-            `root_scope`: the root scope for the document.
+            `scope`: the root scope for the document.
+            `value`: the value of the document.
         """
 
         for adapter in self._adapters:
-            adapter.before_document( root_scope )
+            adapter.before_document( scope, value )
 
-    def process_document( self, root_scope: RootScope ) -> None:
+    def process_document( self, scope: RootScope, value: Any ) -> None:
         """
         Callback invoked when processing the document.
 
         Parameters:
-            `root_scope`: the root scope for the document.
+            `scope`: the root scope for the document.
+            `value`: the value of the document.
         """
 
         for adapter in self._adapters:
-            adapter.process_document( root_scope )
+            adapter.process_document( scope, value )
 
-    def after_document( self, root_scope: RootScope ) -> None:
+    def after_document( self, scope: RootScope, value: Any ) -> None:
         """
         Callback invoked after processing the document.
 
         Parameters:
-            `root_scope`: the root scope for the document.
+            `scope`: the root scope for the document.
+            `value`: the value of the document.
         """
 
         for adapter in self._adapters:
-            adapter.after_document( root_scope )
+            adapter.after_document( scope, value )
 
-    def before_object( self, members: Iterable[ Tuple[ str, Any ] ] ) -> None:
+    def before_object( self, scope: ObjectScope, members: Iterable[ Tuple[ str, Any ] ] ) -> None:
         """
         Callback invoked before processing an object.
         
         Parameters:
+            `scope`: the scope for the object.
             `members`: Iterable of tuples of string and value containing the object member data.
         """
 
         for adapter in self._adapters:
-            adapter.before_object( members )
+            adapter.before_object( scope, members )
 
-    def process_object( self, members: Iterable[ Tuple[ str, Any ] ] ) -> None:
+    def process_object( self, scope: ObjectScope, members: Iterable[ Tuple[ str, Any ] ] ) -> None:
         """
         Callback invoked when processing an object.
         
         Parameters:
+            `scope`: the scope for the object.
             `members`: Iterable of tuples of string and value containing the object member data.
         """
 
         for adapter in self._adapters:
-            adapter.process_object( members )
+            adapter.process_object( scope, members )
 
-    def after_object( self, members: Iterable[ Tuple[ str, Any ] ] ) -> None:
+    def after_object( self, scope: ObjectScope, members: Iterable[ Tuple[ str, Any ] ] ) -> None:
         """
         Callback invoked after processing an object.
         
         Parameters:
+            `scope`: the scope for the object.
             `members`: Iterable of tuples of string and value containing the object member data.
         """
 
         for adapter in self._adapters:
-            adapter.after_object( members )
+            adapter.after_object( scope, members )
 
-    def before_member( self, name: str, value: Any ) -> None:
+    def before_member( self, scope: MemberScope, name: str, value: Any ) -> None:
         """
         Callback invoked before processing an object member.
 
         Parameters:
+            `scope`: the scope for the member.
             `name`: name of the member.
             `value`: value of the member.
         """
 
         for adapter in self._adapters:
-            adapter.before_member( name, value )
+            adapter.before_member( scope, name, value )
 
-    def process_member( self, name: str, value: Any ) -> None:
+    def process_member( self, scope: MemberScope, name: str, value: Any ) -> None:
         """
         Callback invoked when processing an object member.
 
         Parameters:
+            `scope`: the scope for the member.
             `name`: name of the member.
             `value`: value of the member.
         """
 
         for adapter in self._adapters:
-            adapter.process_member( name, value )
+            adapter.process_member( scope, name, value )
 
-    def after_member( self, name: str, value: Any ) -> None:
+    def after_member( self, scope: MemberScope, name: str, value: Any ) -> None:
         """
         Callback invoked after processing an object member.
 
         Parameters:
+            `scope`: the scope for the member.
             `name`: name of the member.
             `value`: value of the member.
         """
 
         for adapter in self._adapters:
-            adapter.after_member( name, value )
+            adapter.after_member( scope, name, value )
 
-    def before_list( self, items: Iterable[ Any ] ) -> None:
+    def before_list( self, scope: ListScope, items: Iterable[ Any ] ) -> None:
         """
         Callback invoked before processing a list.
         
         Parameters:
+            `scope`: the scope for the list.
             `items`: Iterable of the list items.
         """
 
         for adapter in self._adapters:
-            adapter.before_list( items )
+            adapter.before_list( scope, items )
 
-    def process_list( self, items: Iterable[ Any ] ) -> None:
+    def process_list( self, scope: ListScope, items: Iterable[ Any ] ) -> None:
         """
         Callback invoked when processing a list.
         
         Parameters:
+            `scope`: the scope for the list.
             `items`: Iterable of the list items.
         """
 
         for adapter in self._adapters:
-            adapter.process_list( items )
+            adapter.process_list( scope, items )
 
-    def after_list( self, items: Iterable[ Any ] ) -> None:
+    def after_list( self, scope: ListScope, items: Iterable[ Any ] ) -> None:
         """
         Callback invoked after processing a list.
         
         Parameters:
+            `scope`: the scope for the list.
             `items`: Iterable of the list items.
         """
 
         for adapter in self._adapters:
-            adapter.after_list( items )
+            adapter.after_list( scope, items )
 
-    def before_list_item( self, index_: int, value: Any ) -> None:
+    def before_list_item( self, scope: ListItemScope, index_: int, value: Any ) -> None:
         """
         Callback invoked before processing a list item.
         
         Parameters:
+            `scope`: the scope for the list item.
             `index_`: list index of the list item.
             `value`: value of the item item.
         """
 
         for adapter in self._adapters:
-            adapter.before_list_item( index_, value )
+            adapter.before_list_item( scope, index_, value )
 
-    def process_list_item( self, index_: int, value: Any ) -> None:
+    def process_list_item( self, scope: ListItemScope, index_: int, value: Any ) -> None:
         """
         Callback invoked when processing a list item.
         
         Parameters:
+            `scope`: the scope for the list item.
             `index_`: list index of the list item.
             `value`: value of the item item.
         """
 
         for adapter in self._adapters:
-            adapter.process_list_item( index_, value )
+            adapter.process_list_item( scope, index_, value )
 
-    def after_list_item( self, index_: int, value: Any ) -> None:
+    def after_list_item( self, scope: ListItemScope, index_: int, value: Any ) -> None:
         """
         Callback invoked after processing a list item.
         
         Parameters:
+            `scope`: the scope for the list item.
             `index_`: list index of the list item.
             `value`: value of the item item.
         """
 
         for adapter in self._adapters:
-            adapter.after_list_item( index_, value )
+            adapter.after_list_item( scope, index_, value )
