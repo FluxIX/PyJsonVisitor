@@ -1,6 +1,6 @@
-__version__ = r"1.0.0"
+__version__ = r"1.1.0"
 
-from typing import Any, Dict, Iterable, List
+from typing import Any, Dict, Iterable, List, Tuple, Iterator
 
 class Scope( object ):
     """
@@ -77,3 +77,75 @@ class Scope( object ):
             parameter_str: str = ""
 
         return f"{ self.__class__.__qualname__ }({ parameter_str })"
+
+    def _walk_lineage( self ) -> None:
+        yield self
+        scope = self
+        while scope.has_parent:
+            scope = scope.parent
+            yield scope
+
+    def get_lineage( self, root_first: bool = True ) -> Iterator[ "Scope" ]:
+        """
+        Gets the lineage of the current scope. If the given `root_first` is True, the root of the scope chain of the current scope is the first element and the current scope is the last element, otherwise the current scope is first element and the root scope is the last element.
+        
+        Returns:
+            Iterator of the scope chain in the specified order.
+        """
+
+        result: Iterator[ "Scope" ] = self._walk_lineage()
+        if root_first:
+            result = reversed( tuple( result ) )
+
+        return result
+
+    @property
+    def lineage( self ) -> Iterator[ "Scope" ]:
+        """
+        Gets the lineage of the current scope from root of the scope chain to the current scope; the root appears as the first element and the current scope appears last.
+
+        Returns:
+            Iterator of the scope chain from root to current scope.
+        """
+
+        return self.get_lineage( root_first = True )
+
+    @property
+    def depth( self ) -> int:
+        """
+        Gets the depth of the current scope in the scope chain; if the current scope is the root of the chain, the depth is zero.
+
+        Returns:
+            Integer value representing the depth of the current scope in the scope chain.
+        """
+
+        return len( tuple( self.get_lineage( root_first = False ) ) ) - 1
+
+    def get_ancestor( self, distance: int = 1 ) -> "Scope":
+        """
+        Gets the ancestor of the current scope which is the given distance away from the current scope.
+
+        Returns:
+            The ancestor of the current scope which is the given distance away from the current scope.
+        """
+
+        if distance < 0:
+            result: "Scope" = None
+        else:
+            lineage: Tuple[ "Scope" ] = tuple( self.get_lineage( root_first = False ) )
+            if distance > len( lineage ):
+                result: "Scope" = None
+            else:
+                result: "Scope" = lineage[ distance ]
+
+        return result
+
+    def has_ancestor( self, distance = 1 ) -> bool:
+        """
+        Indicates of the current scope has an ancestor which is the given distance away from the current scope.
+        
+        Returns:
+            `True` if the current scope has an ancestor which is the given distance away from the current scope, `False` otherwise.
+        """
+
+        return self.get_ancestor( distance ) is not None
