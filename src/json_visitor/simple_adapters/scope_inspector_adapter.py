@@ -1,14 +1,61 @@
-__version__ = r"1.0.0"
+__version__ = r"1.1.0"
 
-from typing import Any, Iterable
+from typing import Any, Dict, Iterable, List, Union, TextIO
+from io import TextIOWrapper
 
+import sys
+from pathlib import Path
 from .scope_adapter import ScopeAdapter
 
 class ScopeInspectionAdapter( ScopeAdapter ):
-    def __init__( self ):
+    def __init__( self, **kwargs: Dict[ str, Any ] ):
+        """
+        Creates a ScopeInspectionAdapter.
+        
+        Keyword Arguments:
+            `output_targets`: iterable of output targets.
+            `open_file_mode`: file mode output targets will be opened with; defaults to write ("w").
+            `output_console`: boolean which controls if stdout should be written to; defaults to True, indicating stdout will be written to.
+            `output_error`: boolean which controls if stderr should be written to; defaults to False, indicating stderr will not be written to.
+        """
+
         super().__init__()
 
-        self._output_message = lambda message: print( message )
+        output_targets: Iterable[ str, Path, TextIO ] = kwargs.get( "output_targets", None )
+        if output_targets is None:
+            output_targets = []
+
+        open_file_mode = kwargs.get( "open_file_mode", None )
+        if open_file_mode is None:
+            open_file_mode: str = "w"
+
+        output_console: bool = bool( kwargs.get( "output_console", True ) )
+        output_error: bool = bool( kwargs.get( "output_error", False ) )
+
+        self._output_targets: List[ TextIO ] = []
+
+        if output_console:
+            self._output_targets.append( sys.stdout )
+
+        if output_error:
+            self._output_targets.append( sys.stderr )
+
+        for target in output_targets:
+            if isinstance( target, str ):
+                target = Path( target )
+
+            if isinstance( target, Path ):
+                target = open( target, open_file_mode )
+
+            if not isinstance( target, ( TextIO, TextIOWrapper ) ):
+                raise ValueError( "Invalid scope inspection target: target must be a string, path, or text stream." )
+            else:
+                self._output_targets.append( target )
+
+    def _output_message( self, message: str ) -> None:
+        for target in self._output_targets:
+            print( message, file = target )
+            target.flush()
 
     def _print_message( self, name, *values: Iterable[ Any ] ) -> None:
         if len( values ) > 0:
