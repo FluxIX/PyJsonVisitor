@@ -1,6 +1,6 @@
-__version__ = r"1.0.0"
+__version__ = r"1.1.0"
 
-from typing import Any, Iterable, Tuple
+from typing import Any, Dict, Iterable, Tuple
 
 from ..simple_adapters.scope_adapter import ScopeAdapter
 from ..scoping.root_scope import RootScope
@@ -12,8 +12,8 @@ class BaseAdapter( ScopeAdapter ):
     This adapter tracks scope and stores data to implement higher-level callbacks.
     """
 
-    def __init__( self ):
-        super().__init__()
+    def __init__( self, **kwargs: Dict[ str, Any ] ):
+        super().__init__( **kwargs )
         self._persistent_data = True
 
     def after_document_end( self ) -> None:
