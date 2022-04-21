@@ -1,25 +1,12 @@
-__version__ = r"1.1.0"
+__version__ = r"1.0.0"
 
-from typing import Any, Dict, Iterable, Tuple
+from typing import Any, Iterable, Tuple
 
 from ..scoping.root_scope import RootScope
 from .base_adapter import BaseAdapter
 from ..simple_adapters.scope_inspector_adapter import ScopeInspectionAdapter
 
 class InspectionAdapter( BaseAdapter, ScopeInspectionAdapter ):
-    def __init__( self, **kwargs: Dict[ str, Any ] ):
-        """
-        Creates a InspectionAdapter.
-        
-        Keyword Arguments:
-            `output_targets`: iterable of output targets.
-            `open_file_mode`: file mode output targets will be opened with; defaults to write ("w").
-            `output_console`: boolean which controls if stdout should be written to; defaults to True, indicating stdout will be written to.
-            `output_error`: boolean which controls if stderr should be written to; defaults to False, indicating stderr will not be written to.
-        """
-
-        super().__init__( **kwargs )
-
     def process_document( self, root_scope: RootScope ) -> None:
         super().process_document( root_scope )
 
