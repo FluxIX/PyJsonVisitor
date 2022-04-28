@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any, Dict, Iterable
 
 from ..scope import Scope
 
@@ -12,48 +12,50 @@ class BaseFilter( object ):
     def _internal_evaluate( self, scope_item: Scope, **kwargs: Dict[ str, Any ] ) -> bool:
         raise NotImplementedError( "Child must implement." )
 
-    def and_( self, other: "BaseFilter", **kwargs: Dict[ str, Any ] ) -> "AndFilter":
+    def and_( self, *others: Iterable[ "BaseFilter" ], **kwargs: Dict[ str, Any ] ) -> "AndFilter":
         from .and_filter import AndFilter
 
-        self_is_and: bool = isinstance( self, AndFilter )
-        other_is_and: bool = isinstance( other, AndFilter )
+        result = self
 
-        if self_is_and:
-            if other_is_and:
-                self.filters.extend( other.filters )
-            else:
-                self.filters.append( other )
+        for other in others:
+            result_is_and: bool = isinstance( result, AndFilter )
+            other_is_and: bool = isinstance( other, AndFilter )
 
-            result = self
-        else:
-            if other_is_and:
-                other.filters.insert( 0, self )
-                result = other
+            if result_is_and:
+                if other_is_and:
+                    result.filters.extend( other.filters )
+                else:
+                    result.filters.append( other )
             else:
-                result = AndFilter( self, other, **kwargs )
+                if other_is_and:
+                    other.filters.insert( 0, result )
+                    result = other
+                else:
+                    result = AndFilter( result, other, **kwargs )
 
         return result
 
-    def or_( self, other: "BaseFilter", **kwargs: Dict[ str, Any ] ) -> "OrFilter":
+    def or_( self, *others: Iterable[ "BaseFilter" ], **kwargs: Dict[ str, Any ] ) -> "OrFilter":
         from .and_filter import AndFilter
         from .or_filter import OrFilter
 
-        other_is_and: bool = isinstance( other, AndFilter )
-        self_is_or: bool = isinstance( self, OrFilter )
-        other_is_or: bool = isinstance( other, OrFilter )
+        result = self
 
-        if self_is_or:
-            if other_is_or:
-                self.filters.extend( other.filters )
-                result = self
-            elif other_is_and:
-                other.filters.insert( 0, self )
-                result = other
+        for other in others:
+            other_is_and: bool = isinstance( other, AndFilter )
+            result_is_or: bool = isinstance( result, OrFilter )
+            other_is_or: bool = isinstance( other, OrFilter )
+
+            if result_is_or:
+                if other_is_or:
+                    result.filters.extend( other.filters )
+                elif other_is_and:
+                    other.filters.insert( 0, result )
+                    result = other
+                else:
+                    result.filters.append( other )
             else:
-                self.filters.append( other )
-                result = self
-        else:
-            result = OrFilter( self, other, **kwargs )
+                result = OrFilter( result, other, **kwargs )
 
         return result
 
