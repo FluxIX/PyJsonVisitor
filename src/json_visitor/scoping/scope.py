@@ -139,7 +139,7 @@ class Scope( object ):
             result: "Scope" = None
         else:
             lineage: Tuple[ "Scope" ] = tuple( self.get_lineage( root_first = False ) )
-            if distance > len( lineage ):
+            if distance > ( len( lineage ) - 1 ):
                 result: "Scope" = None
             else:
                 result: "Scope" = lineage[ distance ]
