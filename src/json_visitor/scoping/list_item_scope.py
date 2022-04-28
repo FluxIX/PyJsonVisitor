@@ -88,3 +88,6 @@ class ListItemScope( Scope ):
 
     def _get_str_param_strings( self ) -> List[ str ]:
         return [ f"{ self.item_index }: { self.item_value_scope.get_value() if self.item_value_scope is not None else None }" ]
+
+    def _get_children_scopes( self ) -> Iterable[ Scope ]:
+        return ( self.item_value_scope, )

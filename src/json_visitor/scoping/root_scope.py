@@ -57,3 +57,13 @@ class RootScope( Scope ):
 
     def _get_str_param_strings( self ) -> List[ str ]:
         return [ f"child = { self.child_scope }" ]
+
+    def _get_children_scopes( self ) -> Iterable[ Scope ]:
+        return ( self.child_scope, )
+
+    def set_value( self, value:Any, **kwargs: Dict[ str, Any ] ) -> None:
+        """
+        Sets the evaluated value of the current scope.
+        """
+
+        raise NotImplementedError( "Unsupported operation." )

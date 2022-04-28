@@ -1,6 +1,6 @@
 __version__ = r"2.0.0"
 
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Iterable
 
 from .scope_types import ScopeTypes
 from .scope import Scope
@@ -44,6 +44,8 @@ class ValueScope( Scope ):
         self._value: Any = value
         self._has_value: bool = not is_initial_value
 
+    value = property( fget = get_value, fset = set_value )
+
     @property
     def has_value( self ) -> bool:
         """
@@ -71,3 +73,6 @@ class ValueScope( Scope ):
 
     def _get_str_param_strings( self ) -> List[ str ]:
         return [ f"value = { self.get_value() }" ]
+
+    def _get_children_scopes( self ) -> Iterable[ Scope ]:
+        return tuple()

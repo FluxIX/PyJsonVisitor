@@ -106,3 +106,6 @@ class MemberScope( Scope ):
         value_str: str = f"value = { self.value_scope.get_value() if self.value_scope is not None else None }"
 
         return [ name_str, value_str ]
+
+    def _get_children_scopes( self ) -> Iterable[ Scope ]:
+        return self.name_scope, self.value_scope

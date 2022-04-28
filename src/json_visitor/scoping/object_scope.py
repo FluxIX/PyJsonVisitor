@@ -48,3 +48,6 @@ class ObjectScope( Scope ):
 
     def _get_str_param_strings( self ) -> List[ str ]:
         return [ f"members = { self.members }" ]
+
+    def _get_children_scopes( self ) -> Iterable[ Scope ]:
+        return tuple( self._member_scopes )

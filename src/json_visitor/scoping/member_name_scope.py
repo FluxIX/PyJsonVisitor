@@ -47,3 +47,5 @@ class MemberNameScope( Scope ):
 
         return [ name_str ]
 
+    def _get_children_scopes( self ) -> Iterable[ Scope ]:
+        return tuple()

@@ -61,3 +61,6 @@ class ListScope( Scope ):
         items_str: str = f"items = { self.get_value() }"
 
         return [ items_str ]
+
+    def _get_children_scopes( self ) -> Iterable[ Scope ]:
+        return tuple( self._item_scopes )

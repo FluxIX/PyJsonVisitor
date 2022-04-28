@@ -2,6 +2,8 @@ __version__ = r"2.0.0"
 
 from typing import Any, Dict, Iterable, List, Tuple, Iterator
 from .scope_types import ScopeTypes
+from ..tokenizer.token_processor import TokenProcessor
+from ..tokenizer.scope_walker import ScopeWalker
 
 class Scope( object ):
     """
@@ -61,6 +63,20 @@ class Scope( object ):
         """
         Gets the evaluated value of the current scope.
         """
+
+        raise NotImplementedError( "Child must implement." )
+
+    def set_value( self, value: Any, **kwargs: Dict[ str, Any ] ) -> None:
+        """
+        Sets the evaluated value of the current scope.
+        """
+
+        from ..simple_adapters.scope_adapter import ScopeAdapter
+
+        scope_adapter: ScopeAdapter = ScopeAdapter()
+        processor: TokenProcessor = TokenProcessor( ScopeWalker( scope_adapter ) )
+        processor.process_json( value )
+        new_scope: "Scope" = scope_adapter.root_scope.child_scope
 
         raise NotImplementedError( "Child must implement." )
 
@@ -155,3 +171,114 @@ class Scope( object ):
         """
 
         return self.get_ancestor( distance ) is not None
+
+    def _get_children_scopes( self ) -> Iterable[ "Scope" ]:
+        """
+        Gets the immediate children scopes of the current scope.
+
+        Returns:
+            The immediate children scopes of the current scope.
+        """
+
+        raise NotImplementedError( "Child must implement." )
+
+    def _get_descendant_scopes( self, min_depth: int, max_depth: int = None ) -> Iterable[ "Scope" ]:
+        """
+        Gets the descendant scopes for the current scopes which have a depth of at least the given minimum and, if the given maximum depth is not None, a depth of at most the given maximum depth.
+
+        Arguments:
+            `min_depth`: the minimum depth of descendant scopes to select.
+            `max_depth`: if `None`, no maximum depth is specified, otherwise the maximum depth of descendant scopes to select.
+
+        Returns:
+            The descendant scopes which match the given minimum and maximum depths.
+        """
+
+        if not isinstance( min_depth, int ):
+            raise ValueError( f"Minimum depth ({ min_depth }) must be an integer." )
+        elif not isinstance( max_depth, ( int, None ) ):
+            raise ValueError( f"Maximum depth ({ max_depth }) must be either an integer or None." )
+        elif min_depth <= 0:
+            raise ValueError( f"Minimum depth ({ min_depth }) must be a positive integer." )
+        elif max_depth is not None and max_depth <= 0:
+            raise ValueError( f"Maximum depth ({ max_depth }) must be either a positive integer or None." )
+        elif max_depth is None or min_depth <= max_depth:
+            current_depth: int = 1
+            current_ply = tuple( self._get_children_scopes() )
+            while ( max_depth is None or current_depth <= max_depth ) and len( current_ply ) > 0:
+                new_ply = []
+
+                for scope in current_ply:
+                    if current_depth >= min_depth:
+                        yield scope
+                    new_ply.extend( scope._get_children_scopes() )
+
+                current_depth += 1
+                current_ply = new_ply
+
+    def find_children_scopes( self, **kwargs: Dict[ str, Any ] ) -> Iterable[ "Scope" ]:
+        """
+        Finds the children scopes of the current scope which match the given criteria.
+
+        Returns:
+            The children scopes of the current scope which match the given criteria.
+        """
+
+        keyword_args = kwargs.copy()
+        keyword_args.update( min_depth = 1, max_depth = 1 )
+        return self.find_descendant_scopes( **keyword_args )
+
+    def find_descendant_scopes( self, **kwargs: Dict[ str, Any ] ) -> Iterable[ "Scope" ]:
+        """
+        Finds the descendant scopes of the current scope which match the given criteria.
+
+        Keyword Arguments:
+            `min_depth`: minimum depth to select descendants. If specified, the minimum depth must be positive.
+            `max_depth`: maximum depth to select descendants. If specified, the maximum depth must be positive; if `None` or not specified, there is no maximum depth.
+            `filter`: expression used to filter the select the descendants. If `None` or not specified, all descendants are selected.
+
+        Returns:
+            The children scopes of the current scope which match the given criteria.
+        """
+
+        min_depth: int = int( kwargs.get( "min_depth", 1 ) )
+        max_depth = kwargs.get( "max_depth", None )
+        if max_depth is not None:
+            max_depth: int = int( max_depth )
+
+        result = tuple( self._get_descendant_scopes( min_depth, max_depth ) )
+
+        filter_ = kwargs.get( "filter", None )
+        if filter_ is not None:
+            result = filter( filter_, result )
+
+        return result
+
+    def replace_children_scope_values( self, value: Any, **kwargs: Dict[ str, Any ] ) -> None:
+        """
+        Replaces value of the children scopes specified by the given keyword arguments with the given value if a matching child scope is found.
+        
+        Arguments:
+            `value` new evaluated value for the located children.
+        """
+
+        keyword_args = kwargs.copy()
+        keyword_args.update( min_depth = 1, max_depth = 1 )
+        return self.replace_descendant_scope_values( value, **keyword_args )
+
+    def replace_descendant_scope_values( self, value: Any, **kwargs: Dict[ str, Any ] ) -> None:
+        """
+        Replaces value of the descendant scopes specified by the given keyword arguments with the given value if a matching child scope is found.
+        
+        Arguments:
+            `value` new evaluated value for the located children.
+
+        Keyword Arguments:
+            `min_depth`: minimum depth to select descendants. If specified, the minimum depth must be positive.
+            `max_depth`: maximum depth to select descendants. If specified, the maximum depth must be positive; if `None` or not specified, there is no maximum depth.
+            `filter`: expression used to filter the select the descendants. If `None` or not specified, all descendants are selected.
+        """
+
+        for descendant_scope in self.find_descendant_scopes( **kwargs ):
+            if descendant_scope is not None:
+                descendant_scope.set_value( value )
