@@ -1,20 +1,9 @@
-__version__ = r"1.0.0"
+__version__ = r"1.1.0"
 
 from typing import Any, Callable, Dict, Iterable, List, Tuple
 
-from enum import Enum, auto
+from ..scoping.scope_types import ScopeTypes
 from ..simple_adapters.base_adapter import BaseAdapter
-
-class ScopeTypes( Enum ):
-    RootObject = auto()
-    Object = auto()
-    List = auto()
-    ListItem = auto()
-    ListItemValue = auto()
-    Member = auto()
-    MemberName = auto()
-    MemberValue = auto()
-    Value = auto()
 
 class ScopeWalker( object ):
     # TODO: Update the order of execution documentation.
@@ -54,7 +43,7 @@ class ScopeWalker( object ):
         return self._scope_stack[ -1 ] if len( self._scope_stack ) > 0 else None
 
     def process_document_start( self ) -> None:
-        self._scope_stack.append( ScopeTypes.RootObject )
+        self._scope_stack.append( ScopeTypes.Root )
 
         for adapter in self._adapters:
             adapter.before_document_start()

@@ -1,10 +1,10 @@
-__version__ = r"1.0.1"
+__version__ = r"1.1.0"
 
 from typing import Any, List
 
 from ..scoping.scope import Scope
 from ..scoping.root_scope import RootScope
-from ..scoping.value_scope import ValueScope
+from ..scoping.simple_value_scope import SimpleValueScope
 from ..scoping.list_scope import ListScope
 from ..scoping.list_item_scope import ListItemScope
 from ..scoping.list_item_value_scope import ListItemValueScope
@@ -295,7 +295,7 @@ class ScopeAdapter( BaseAdapter ):
 
         if self.current_scope.is_root:
             # A value with a root scope as the parent indicates the JSON string does is a value, not a list or object.
-            # Since a ValueScope can't have any children, no popping of the scope will be done.
-            self._push_scope( ValueScope( initial_value = value ) )
+            # Since a SimpleValueScope can't have any children, no popping of the scope will be done.
+            self._push_scope( SimpleValueScope( initial_value = value ) )
         elif self._persistent_data:
             self._values.append( value )

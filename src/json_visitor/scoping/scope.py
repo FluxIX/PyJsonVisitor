@@ -1,14 +1,20 @@
-__version__ = r"1.1.0"
+__version__ = r"2.0.0"
 
 from typing import Any, Dict, Iterable, List, Tuple, Iterator
+from .scope_types import ScopeTypes
 
 class Scope( object ):
     """
     Implements a JSON node scope.
     """
 
-    def __init__( self, parent: "Scope" = None ):
+    def __init__( self, scope_type: ScopeTypes, parent: "Scope" = None ):
+        self._type: ScopeTypes = scope_type
         self._parent: Scope = parent
+
+    @property
+    def type( self ) -> ScopeTypes:
+        return self._type
 
     def get_parent( self ) -> "Scope":
         """

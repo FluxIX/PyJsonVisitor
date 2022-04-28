@@ -1,7 +1,8 @@
-__version__ = r"1.0.0"
+__version__ = r"1.1.0"
 
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Iterable
 
+from .scope_types import ScopeTypes
 from .scope import Scope
 from .list_item_value_scope import ListItemValueScope
 
@@ -13,7 +14,7 @@ class ListItemScope( Scope ):
     def __init__( self, **kwargs: Dict[ str, Any ] ):
         parent: "ListScope" = kwargs.get( "parent", None )
 
-        super().__init__( parent )
+        super().__init__( ScopeTypes.ListItem, parent )
 
         self._item_index: int = kwargs.get( "item_index", None )
         if self._item_index is not None:

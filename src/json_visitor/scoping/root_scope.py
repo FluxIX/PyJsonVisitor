@@ -1,7 +1,8 @@
-__version__ = r"1.0.0"
+__version__ = r"1.1.0"
 
-from typing import Any, List
+from typing import Any, List, Dict, Iterable
 
+from .scope_types import ScopeTypes
 from .scope import Scope
 
 class RootScope( Scope ):
@@ -10,7 +11,7 @@ class RootScope( Scope ):
     """
 
     def __init__( self, child: Scope = None ):
-        super().__init__( None )
+        super().__init__( ScopeTypes.Root, None )
 
         self._child: Scope = child
 

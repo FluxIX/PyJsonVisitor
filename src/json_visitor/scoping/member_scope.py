@@ -1,7 +1,8 @@
-__version__ = r"1.0.0"
+__version__ = r"1.1.0"
 
-from typing import Any, List
+from typing import Any, List, Iterable
 
+from .scope_types import ScopeTypes
 from .scope import Scope
 from .member_name_scope import MemberNameScope
 from .member_value_scope import MemberValueScope
@@ -12,7 +13,7 @@ class MemberScope( Scope ):
     """
 
     def __init__( self, parent: "ObjectScope" = None, name_scope: MemberNameScope = None, value_scope: MemberValueScope = None ):
-        super().__init__( parent )
+        super().__init__( ScopeTypes.Member, parent )
 
         self._name_scope: MemberNameScope = name_scope
         self._value_scope: MemberValueScope = value_scope

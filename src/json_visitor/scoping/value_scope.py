@@ -1,7 +1,8 @@
-__version__ = r"1.0.0"
+__version__ = r"2.0.0"
 
 from typing import Any, Dict, List
 
+from .scope_types import ScopeTypes
 from .scope import Scope
 
 class ValueScope( Scope ):
@@ -9,8 +10,8 @@ class ValueScope( Scope ):
     Implements a JSON value node scope.
     """
 
-    def __init__( self, parent: Scope = None, initial_value: Any = None, is_initial_value: bool = False ):
-        super().__init__( parent )
+    def __init__( self, scope_type: ScopeTypes, parent: Scope = None, initial_value: Any = None, is_initial_value: bool = False ):
+        super().__init__( scope_type, parent )
 
         self.set_value( initial_value, is_initial_value = bool( is_initial_value ) )
 
