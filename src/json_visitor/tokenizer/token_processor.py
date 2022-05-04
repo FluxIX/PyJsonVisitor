@@ -1,4 +1,4 @@
-__version__ = r"1.1.0"
+__version__ = r"1.1.1"
 
 from typing import Any, Dict, List, Tuple, Callable, TextIO, Union
 
@@ -122,9 +122,9 @@ class TokenProcessor( object ):
                 elif scope_type == ScopeTypes.List:
                     new_items = []
                     for item in items:
-                        new_items.append( NodeTypes.Event, ( "start_array", None ) )
-                        new_items.append( NodeTypes.Item, ( get_scope_type( item ), item ) )
-                        new_items.append( NodeTypes.Event, ( "end_array", None ) )
+                        new_items.append( ( NodeTypes.Event, ( "start_array", None ) ) )
+                        new_items.append( ( NodeTypes.Item, ( get_scope_type( item ), item ) ) )
+                        new_items.append( ( NodeTypes.Event, ( "end_array", None ) ) )
                 elif scope_type == ScopeTypes.Value:
                     new_items = [ ( NodeTypes.Event, ( "value", items ) ) ]
                 else: # if scope_type == None: # The scope type is unknown; detect the type and reprocess.
