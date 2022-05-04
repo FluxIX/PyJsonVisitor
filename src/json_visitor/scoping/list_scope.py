@@ -1,6 +1,6 @@
-__version__ = r"1.1.0"
+__version__ = r"1.2.0"
 
-from typing import Any, Iterable, List, Tuple
+from typing import Any, Dict, Iterable, List, Tuple
 
 from .scope_types import ScopeTypes
 from .scope import Scope
@@ -64,3 +64,23 @@ class ListScope( Scope ):
 
     def _get_children_scopes( self ) -> Iterable[ Scope ]:
         return tuple( self._item_scopes )
+
+    def set_value( self, value: Any, **kwargs: Dict[ str, Any ] ) -> None:
+        if not isinstance( value, ( tuple, list ) ):
+            raise ValueError( "List values must be an Iterable." )
+        else:
+            # TODO: Consider a less-naive method.
+            # A method which might work "better" would include sorting the keys and doing the following:
+            #    - adding the new keys which did not previously exist
+            #    - remove the keys which no longer exist
+            #    - update existing keys with the new value; this could be recursive
+
+            item_scopes: List[ Scope ] = [ ( index_, self._get_scope_tree( v ) ) for index_, v in enumerate( value ) ]
+
+            for scope in self._item_scopes:
+                scope.parent = None
+
+            self._item_scopes = item_scopes
+
+            for scope in self._item_scopes:
+                scope.set_parent( self )

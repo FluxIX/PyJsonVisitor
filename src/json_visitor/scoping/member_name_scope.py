@@ -1,6 +1,6 @@
-__version__ = r"1.1.0"
+__version__ = r"1.2.0"
 
-from typing import Any, List, Iterable
+from typing import Any, Dict, List, Iterable
 
 from .scope_types import ScopeTypes
 from .scope import Scope
@@ -49,3 +49,6 @@ class MemberNameScope( Scope ):
 
     def _get_children_scopes( self ) -> Iterable[ Scope ]:
         return tuple()
+
+    def set_value( self, value: Any, **kwargs: Dict[ str, Any ] ) -> None:
+        self._name = value

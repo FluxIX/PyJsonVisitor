@@ -1,4 +1,4 @@
-__version__ = r"1.1.0"
+__version__ = r"1.2.0"
 
 from typing import Any, Dict, List, Iterable
 
@@ -20,7 +20,8 @@ class ListItemScope( Scope ):
         if self._item_index is not None:
             self._item_index: int = int( self._item_index )
 
-        self._item_value_scope: ListItemValueScope = kwargs.get( "item_value_scope", None )
+        self._item_value_scope: ListItemValueScope = None
+        self.set_value_scope( kwargs.get( "item_value_scope", None ) )
 
     @property
     def item_index( self ) -> int:
@@ -91,3 +92,23 @@ class ListItemScope( Scope ):
 
     def _get_children_scopes( self ) -> Iterable[ Scope ]:
         return ( self.item_value_scope, )
+
+    def set_value( self, value: Any, **kwargs: Dict[ str, Any ] ) -> None:
+        """
+        Sets the evaluated value of the current scope.
+        """
+
+        scope_tree: Scope = self._get_scope_tree( value, **kwargs )
+        self.set_value_scope( scope_tree )
+
+
+    def set_value_scope( self, value_scope: Scope ) -> None:
+        # TODO: consider a method which examines the current child before replacing it.
+
+        if self.has_item_value_scope:
+            self.item_value_scope.parent = None
+
+        self._item_value_scope: ListItemValueScope = value_scope
+
+        if self.has_item_value_scope:
+            self.item_value_scope.set_parent( self )

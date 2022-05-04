@@ -1,6 +1,6 @@
-__version__ = r"1.1.0"
+__version__ = r"1.2.0"
 
-from typing import Any, List, Iterable
+from typing import Any, Dict, List, Iterable
 
 from .scope_types import ScopeTypes
 from .scope import Scope
@@ -109,3 +109,13 @@ class MemberScope( Scope ):
 
     def _get_children_scopes( self ) -> Iterable[ Scope ]:
         return self.name_scope, self.value_scope
+
+    def set_value( self, value: Any, **kwargs: Dict[ str, Any ] ) -> None:
+        if isinstance( value, ( tuple, list ) ) and len( value ) == 2 and isinstance( value[ 0 ], str ):
+            value: Dict[ str, Any ] = { value[ 0 ]: value[ 1 ] }
+
+        if not isinstance( value, dict ) or len( value ) != 1:
+            raise ValueError( "Value must be either a tuple or list with two values (and the first value is a string), or a dict with one item." )
+        else:
+            self.name_scope.set_value( tuple( value.keys() )[ 0 ] )
+            self.value_scope.set_value( tuple( value.values() )[ 0 ] )

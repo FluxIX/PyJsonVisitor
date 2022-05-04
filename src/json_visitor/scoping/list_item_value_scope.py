@@ -1,14 +1,13 @@
-__version__ = r"1.1.0"
-
-from typing import Any
+__version__ = r"1.2.0"
 
 from .scope_types import ScopeTypes
-from .value_scope import ValueScope
+from .scope import Scope
+from .complex_value_scope import ComplexValueScope
 
-class ListItemValueScope( ValueScope ):
+class ListItemValueScope( ComplexValueScope ):
     """
     Implements a JSON list item value node scope.
     """
 
-    def __init__( self, parent: "ListItemScope" = None, initial_value: Any = None, is_initial_value: bool = False ):
-        super().__init__( ScopeTypes.ListItemValue, parent, initial_value, is_initial_value )
+    def __init__( self, value_scope: Scope = None, parent: "ListItemScope" = None ):
+        super().__init__( ScopeTypes.ListItemValue, value_scope, parent )

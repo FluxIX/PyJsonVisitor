@@ -1,4 +1,4 @@
-__version__ = r"1.1.0"
+__version__ = r"1.1.1"
 
 from typing import Any, List
 
@@ -27,7 +27,7 @@ class ScopeAdapter( BaseAdapter ):
         self.current_scope: Scope = None
         self._root: RootScope = None
 
-        self._values: List[ Any ] = []
+        self._value_scopes: List[ Scope ] = []
         self._list_item_scopes_stack: List[ List[ Any ] ] = []
 
     def get_current_scope( self ) -> Scope:
@@ -132,10 +132,10 @@ class ScopeAdapter( BaseAdapter ):
 
         super().after_object_end()
 
-        if self._persistent_data:
-            self._values.append( self.current_scope.get_value() )
+        value_scope: Scope = self._pop_scope()
 
-        self._pop_scope()
+        if self._persistent_data:
+            self._value_scopes.append( value_scope )
 
     def before_member_start( self ) -> None:
         """
@@ -192,7 +192,7 @@ class ScopeAdapter( BaseAdapter ):
 
         super().before_member_value_start()
 
-        scope = MemberValueScope( is_initial_value = True )
+        scope = MemberValueScope()
 
         self.current_scope._value_scope = scope
         self._push_scope( scope )
@@ -205,7 +205,8 @@ class ScopeAdapter( BaseAdapter ):
         super().after_member_value_end()
 
         if self._persistent_data:
-            self.current_scope.set_value( self._values.pop() )
+            value_scope: Scope = self._value_scopes.pop()
+            self.current_scope.set_child_scope( value_scope )
 
         self._pop_scope()
 
@@ -228,14 +229,12 @@ class ScopeAdapter( BaseAdapter ):
         Callback invoked after processing the end of a list.
         """
 
-        self.current_scope._item_scopes = self._list_item_scopes_stack.pop()
-
         super().after_list_end()
 
-        if self._persistent_data:
-            self._values.append( self.current_scope.get_value() )
+        value_scope: Scope = self._pop_scope()
 
-        self._pop_scope()
+        if self._persistent_data:
+            self._value_scopes.append( value_scope )
 
     def before_list_item_start( self ) -> None:
         """
@@ -266,7 +265,7 @@ class ScopeAdapter( BaseAdapter ):
 
         super().before_list_item_value_start()
 
-        scope = ListItemValueScope( is_initial_value = True )
+        scope = ListItemValueScope()
 
         self.current_scope._item_value_scope = scope
         self._push_scope( scope )
@@ -279,7 +278,8 @@ class ScopeAdapter( BaseAdapter ):
         super().after_list_item_value_end()
 
         if self._persistent_data:
-            self.current_scope.set_value( self._values.pop() )
+            value_scope: Scope = self._value_scopes.pop()
+            self.current_scope.set_child_scope( value_scope )
 
         self._pop_scope()
 
@@ -293,9 +293,15 @@ class ScopeAdapter( BaseAdapter ):
 
         super().process_value( value )
 
-        if self.current_scope.is_root:
-            # A value with a root scope as the parent indicates the JSON string does is a value, not a list or object.
-            # Since a SimpleValueScope can't have any children, no popping of the scope will be done.
-            self._push_scope( SimpleValueScope( initial_value = value ) )
-        elif self._persistent_data:
-            self._values.append( value )
+        if self.current_scope.is_root or self._persistent_data:
+            value_scope: SimpleValueScope = SimpleValueScope( initial_value = value )
+
+            # Because the model of placing the new scope to write into before the entire scope is constructed,
+            # if the current scope is the root scope (indicating the document is a single value), we need to attach
+            # the value scope onto the root, otherwise we simply place the value scope in the value scope stack
+            # and the parent scope will pick it up later.
+
+            if self.current_scope.is_root:
+                self.current_scope.set_child_scope( value_scope )
+            else: # if self._persistent_data:
+                self._value_scopes.append( value_scope )

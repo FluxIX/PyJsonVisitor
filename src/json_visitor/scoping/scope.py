@@ -1,4 +1,4 @@
-__version__ = r"2.0.0"
+__version__ = r"2.1.0"
 
 from typing import Any, Dict, Iterable, List, Tuple, Iterator
 from .scope_types import ScopeTypes
@@ -71,14 +71,18 @@ class Scope( object ):
         Sets the evaluated value of the current scope.
         """
 
+        raise NotImplementedError( "Child must implement." )
+
+    def _get_scope_tree( self, value: Any, **kwargs: Dict[ str, Any ] ) -> "Scope":
         from ..simple_adapters.scope_adapter import ScopeAdapter
 
         scope_adapter: ScopeAdapter = ScopeAdapter()
         processor: TokenProcessor = TokenProcessor( ScopeWalker( scope_adapter ) )
         processor.process_json( value )
-        new_scope: "Scope" = scope_adapter.root_scope.child_scope
 
-        raise NotImplementedError( "Child must implement." )
+        result: "Scope" = scope_adapter.root_scope.child_scope
+
+        return result
 
     def _get_repr_param_strings( self ) -> List[ str ]:
         return [ f"parent = { repr( self.parent ) }" ]
@@ -196,7 +200,7 @@ class Scope( object ):
 
         if not isinstance( min_depth, int ):
             raise ValueError( f"Minimum depth ({ min_depth }) must be an integer." )
-        elif not isinstance( max_depth, ( int, None ) ):
+        elif max_depth is not None and not isinstance( max_depth, int ):
             raise ValueError( f"Maximum depth ({ max_depth }) must be either an integer or None." )
         elif min_depth <= 0:
             raise ValueError( f"Minimum depth ({ min_depth }) must be a positive integer." )

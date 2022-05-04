@@ -1,14 +1,13 @@
-__version__ = r"1.1.0"
-
-from typing import Any
+__version__ = r"2.0.0"
 
 from .scope_types import ScopeTypes
-from .value_scope import ValueScope
+from .scope import Scope
+from .complex_value_scope import ComplexValueScope
 
-class MemberValueScope( ValueScope ):
+class MemberValueScope( ComplexValueScope ):
     """
     Implements a JSON member value node scope.
     """
 
-    def __init__( self, parent: "MemberScope" = None, initial_value: Any = None, is_initial_value: bool = False ):
-        super().__init__( ScopeTypes.MemberValue, parent, initial_value, is_initial_value )
+    def __init__( self, child_scope: Scope = None, parent: "MemberScope" = None ):
+        super().__init__( ScopeTypes.MemberValue, child_scope, parent )

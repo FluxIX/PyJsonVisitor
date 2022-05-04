@@ -1,4 +1,4 @@
-__version__ = r"1.1.0"
+__version__ = r"1.2.0"
 
 from typing import Any, Dict, Iterable, List
 
@@ -51,3 +51,25 @@ class ObjectScope( Scope ):
 
     def _get_children_scopes( self ) -> Iterable[ Scope ]:
         return tuple( self._member_scopes )
+
+    def set_value( self, value: Any, **kwargs: Dict[ str, Any ] ) -> None:
+        if not isinstance( value, dict ):
+            raise ValueError( "Object scope value must be a dict." )
+        else:
+            # TODO: Consider a less-naive method.
+            # A method which might work "better" would include sorting the keys and doing the following:
+            #    - adding the new keys which did not previously exist
+            #    - remove the keys which no longer exist
+            #    - update existing keys with the new value; this could be recursive
+
+            scope: ObjectScope = self._get_scope_tree( value )
+
+            member_scopes: List[ MemberScope ] = scope._member_scopes
+
+            for scope in self._member_scopes:
+                scope.parent = None
+
+            self._member_scopes = member_scopes
+
+            for scope in self._member_scopes:
+                scope.set_parent( self )
