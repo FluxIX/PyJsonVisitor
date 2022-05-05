@@ -290,3 +290,19 @@ class Scope( object ):
         for descendant_scope in self.find_descendant_scopes( **kwargs ):
             if descendant_scope is not None:
                 descendant_scope.set_value( value )
+
+    @property
+    def all_children( self ) -> Iterable[ "Scope" ]:
+        """
+        Gets all of the children of the current scope.
+        """
+
+        return self._get_children_scopes()
+
+    @property
+    def all_descendants( self ) -> Iterable[ "Scope" ]:
+        """
+        Gets all of the children of the current scope.
+        """
+
+        return self._get_descendant_scopes( 1 )
