@@ -5,7 +5,6 @@ try:
 except ImportError:
     pass
 
-
 from .value_comparison_filter import ValueComparisonFilter
 
 class GreaterThanEqualFilter( ValueComparisonFilter ):
