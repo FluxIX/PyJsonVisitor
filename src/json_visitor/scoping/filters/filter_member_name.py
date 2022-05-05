@@ -12,6 +12,8 @@ from .greater_than_equal_filter import GreaterThanEqualFilter
 from .re_match_filter import RegularExpressionMatchFilter
 from .re_fullmatch_filter import RegularExpressionFullMatchFilter
 from .re_search_filter import RegularExpressionSearchFilter
+from .contains_filter import ContainsFilter
+from .in_filter import InFilter
 
 class FilterMemberName( object ):
     def __init__( self, member_name: str ):
@@ -52,17 +54,67 @@ class FilterMemberName( object ):
     def __gt__( self, comparison_value: Any ) -> BaseFilter:
         return GreaterThanFilter( self, comparison_value )
 
-    def in_( self, *args: Iterable[ Any ], **kwargs: Dict[ str, Any ] ) -> BaseFilter:
-        raise NotImplementedError()
+    def in_( self, *values: Iterable[ Any ], **kwargs: Dict[ str, Any ] ) -> BaseFilter:
+        """
+        Creates a filter which selects a scope whose values which exist in the given values.
+        
+        Parameters:
+            `values`: Iterable values which are used to verify the scope whose value is a member of.
+            
+        Returns:
+            A filter which selects a scope whose values which exist in the given values.
+        """
 
-    def contains( self, value: Any, **kwargs: Dict[ str, Any ] ) -> BaseFilter:
-        raise NotImplementedError()
+        return InFilter( self, *values, **kwargs )
+
+    def contains( self, *values: Iterable[ Any ], **kwargs: Dict[ str, Any ] ) -> BaseFilter:
+        """
+        Creates a filter which selects a scope which contains at least one value which exists in the given values.
+        
+        Parameters:
+            `values`: Iterable values which are used to verify the scope which contains at least one value.
+            
+        Returns:
+            A filter which selects a scope which contains at least one value which exists in the given values.
+        """
+
+        return ContainsFilter( self, *values, **kwargs )
 
     def re_matches( self, expression: Union[ str, re.Pattern ], **kwargs: Dict[ str, Any ] ) -> BaseFilter:
+        """
+        Creates a filter which selects a scope whose value matches the given regular expression (using the expression's `match` method).
+
+        Parameters:
+            `expression`: regular expression to match the scope's value against.
+            
+        Returns:
+            A filter which selects a scope whose value matches the given regular expression (using the expression's `match` method).
+        """
+
         return RegularExpressionMatchFilter( self, expression, **kwargs )
 
     def re_fullmatches( self, expression: Union[ str, re.Pattern ], **kwargs: Dict[ str, Any ] ) -> BaseFilter:
+        """
+        Creates a filter which selects a scope whose value matches the given regular expression (using the expression's `fullmatch` method).
+
+        Parameters:
+            `expression`: regular expression to match the scope's value against.
+            
+        Returns:
+            A filter which selects a scope whose value matches the given regular expression (using the expression's `fullmatch` method).
+        """
+
         return RegularExpressionFullMatchFilter( self, expression, **kwargs )
 
     def re_searches( self, expression: Union[ str, re.Pattern ], **kwargs: Dict[ str, Any ] ) -> BaseFilter:
+        """
+        Creates a filter which selects a scope whose value matches the given regular expression (using the expression's `search` method).
+
+        Parameters:
+            `expression`: regular expression to match the scope's value against.
+            
+        Returns:
+            A filter which selects a scope whose value matches the given regular expression (using the expression's `search` method).
+        """
+
         return RegularExpressionSearchFilter( self, expression, **kwargs )
