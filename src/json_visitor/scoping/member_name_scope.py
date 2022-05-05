@@ -51,4 +51,14 @@ class MemberNameScope( Scope ):
         return tuple()
 
     def set_value( self, value: Any, **kwargs: Dict[ str, Any ] ) -> None:
+        """
+        Sets the value of the current scope to the given value.
+        
+        Parameters:
+            `value`: the value the current scope is being set to.
+
+        Returns:
+            None
+        """
+
         self._name = value

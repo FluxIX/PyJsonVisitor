@@ -5,6 +5,10 @@ from typing import Any, Dict
 from .base_filter import BaseFilter
 
 class ValueFilter( BaseFilter ):
+    """
+    Implements a scope filter which has member name.
+    """
+
     def __init__( self, member_name: "FilterMemberName" ):
         from .filter_member_name import FilterMemberName
 
@@ -15,4 +19,8 @@ class ValueFilter( BaseFilter ):
 
     @property
     def member_name( self ) -> "FilterMemberName":
+        """
+        The filter's member name.
+        """
+
         return self._member_name

@@ -10,6 +10,10 @@ except ImportError:
 from .value_comparison_filter import ValueComparisonFilter
 
 class LessThanEqualFilter( ValueComparisonFilter ):
+    """
+    Implements a filter which selects a scope where the scope's evaluated value is less than or equal to a literal value.
+    """
+
     def __init__( self, member_name: "FilterMemberName", comparison_source: Any ):
         super().__init__( member_name, comparison_source )
 

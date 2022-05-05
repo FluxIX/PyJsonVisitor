@@ -13,6 +13,10 @@ except ImportError:
 from .value_filter import ValueFilter
 
 class RegularExpressionFilter( ValueFilter ):
+    """
+    Implements a filter which selects a scope by matching a scope's evaluated value against a regular expression.
+    """
+
     def __init__( self, member_name: "FilterMemberName", expression: Union[ str, re.Pattern ], **kwargs: Dict[ str, Any ] ):
         super().__init__( member_name )
 
@@ -32,6 +36,10 @@ class RegularExpressionFilter( ValueFilter ):
 
     @property
     def expression( self ) -> re.Pattern:
+        """
+        Regular expression to match a scope's evaluated value against.
+        """
+
         return self._expression
 
     def _internal_evaluate( self, scope_item: Scope, **kwargs: Dict[ str, Any ] ) -> bool:

@@ -74,6 +74,10 @@ class Scope( object ):
         raise NotImplementedError( "Child must implement." )
 
     def _get_scope_tree( self, value: Any, **kwargs: Dict[ str, Any ] ) -> "Scope":
+        """
+        Gets the scope tree from the given Python representation of a JSON value.
+        """
+
         from ..simple_adapters.scope_adapter import ScopeAdapter
 
         scope_adapter: ScopeAdapter = ScopeAdapter()

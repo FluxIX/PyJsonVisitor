@@ -5,6 +5,10 @@ from typing import Any, Dict, Iterable
 from ..scope import Scope
 
 class BaseFilter( object ):
+    """
+    Implements a scope filter.
+    """
+
     def __call__( self, scope_item: Scope, **kwargs: Dict[ str, Any ] ) -> bool:
         if scope_item is None:
             raise ValueError( "Scope item cannot be None." )
@@ -15,6 +19,16 @@ class BaseFilter( object ):
         raise NotImplementedError( "Child must implement." )
 
     def and_( self, *others: Iterable[ "BaseFilter" ], **kwargs: Dict[ str, Any ] ) -> "AndFilter":
+        """
+        Creates a filter from the current filter and the given other filters where all input filters must evaluate to `True` to select a scope.
+
+        Parameters:
+            `others`: Iterable of other filters to combine with the current filter.
+
+        Returns:
+            Filter where all constituent filters must evaluate to `True` to select a scope.
+        """
+
         from .and_filter import AndFilter
 
         result = self
@@ -38,6 +52,16 @@ class BaseFilter( object ):
         return result
 
     def or_( self, *others: Iterable[ "BaseFilter" ], **kwargs: Dict[ str, Any ] ) -> "OrFilter":
+        """
+        Creates a filter from the current filter and the given other filters where at least one of the input filters must evaluate to `True` to select a scope.
+
+        Parameters:
+            `others`: Iterable of other filters to combine with the current filter.
+
+        Returns:
+            Filter where at least one of the constituent filters must evaluate to `True` to select a scope.
+        """
+
         from .and_filter import AndFilter
         from .or_filter import OrFilter
 

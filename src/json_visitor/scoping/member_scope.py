@@ -111,6 +111,16 @@ class MemberScope( Scope ):
         return self.name_scope, self.value_scope
 
     def set_value( self, value: Any, **kwargs: Dict[ str, Any ] ) -> None:
+        """
+        Sets the value of the current scope to the given value.
+        
+        Parameters:
+            `value`: the value the current scope is being set to.
+
+        Returns:
+            None
+        """
+
         if isinstance( value, ( tuple, list ) ) and len( value ) == 2 and isinstance( value[ 0 ], str ):
             value: Dict[ str, Any ] = { value[ 0 ]: value[ 1 ] }
 

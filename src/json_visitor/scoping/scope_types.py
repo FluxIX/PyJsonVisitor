@@ -3,6 +3,10 @@ __version__ = r"1.0.0"
 from enum import Enum
 
 class ScopeTypes( Enum ):
+    """
+    Enumeration of the types of scopes.
+    """
+
     Unknown = 0x0
     Root = 0x1
     Object = 0x2

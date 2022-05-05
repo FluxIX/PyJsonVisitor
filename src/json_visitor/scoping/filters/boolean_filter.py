@@ -6,6 +6,10 @@ from ..scope import Scope
 from .base_filter import BaseFilter
 
 class BooleanFilter( BaseFilter ):
+    """
+    Implements a filter which has a number of constituent filters which are evaluated and have an applied boolean operation to determine scope selection.
+    """
+
     def __init__( self, *filters: Iterable[ BaseFilter ], **kwargs: Dict[ str, Any ] ):
         for filter_ in filters:
             if not isinstance( filter_, BaseFilter ):
@@ -17,10 +21,27 @@ class BooleanFilter( BaseFilter ):
 
     @property
     def filters( self ) -> List[ BaseFilter ]:
+        """
+        The constituent filters.
+
+        Returns:
+            The constituent filters.
+        
+        Notes:
+            - This returns a read-write structure.
+        """
+
         return self._filters
 
     @property
     def does_short_circuit_evaluation( self ) -> bool:
+        """
+        Indicates if the current filter does short-circuit evaluation.
+        
+        Returns:
+            `True` if the current filter does short-circuit evaluation, `False` otherwise.
+        """
+
         return self._short_circuit_evaluation
 
     def _internal_evaluate( self, scope_item: Scope, **kwargs: Dict[ str, Any ] ) -> bool:

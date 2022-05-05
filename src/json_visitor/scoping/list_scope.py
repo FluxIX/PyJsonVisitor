@@ -66,6 +66,16 @@ class ListScope( Scope ):
         return tuple( self._item_scopes )
 
     def set_value( self, value: Any, **kwargs: Dict[ str, Any ] ) -> None:
+        """
+        Sets the value of the current scope to the given value.
+        
+        Parameters:
+            `value`: the value the current scope is being set to.
+
+        Returns:
+            None
+        """
+
         if not isinstance( value, ( tuple, list ) ):
             raise ValueError( "List values must be an Iterable." )
         else:

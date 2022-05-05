@@ -53,6 +53,16 @@ class ObjectScope( Scope ):
         return tuple( self._member_scopes )
 
     def set_value( self, value: Any, **kwargs: Dict[ str, Any ] ) -> None:
+        """
+        Sets the value of the current scope to the given value.
+        
+        Parameters:
+            `value`: the value the current scope is being set to.
+
+        Returns:
+            None
+        """
+
         if not isinstance( value, dict ):
             raise ValueError( "Object scope value must be a dict." )
         else:

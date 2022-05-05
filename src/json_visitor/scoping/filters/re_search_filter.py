@@ -12,6 +12,10 @@ except ImportError:
 from .re_filter import RegularExpressionFilter
 
 class RegularExpressionSearchFilter( RegularExpressionFilter ):
+    """
+    Implements a filter which selects a scope by matching a scope's evaluated value against a regular expression using the `search` method.
+    """
+
     def __init__( self, member_name: "FilterMemberName", expression: Union[ str, re.Pattern ], **kwargs: Dict[ str, Any ] ):
         super().__init__( member_name, expression, **kwargs )
 

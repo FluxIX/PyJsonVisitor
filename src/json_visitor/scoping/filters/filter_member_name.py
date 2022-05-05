@@ -1,4 +1,4 @@
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 
 from typing import Any, Dict, Union, Iterable
 
@@ -18,6 +18,10 @@ from .contains_filter import ContainsFilter
 from .in_filter import InFilter
 
 class FilterMemberName( object ):
+    """
+    Represents a scope member name which can also generate filters.
+    """
+
     def __init__( self, member_name: str ):
         if not isinstance( member_name, str ):
             raise ValueError( "Member name must be string." )
@@ -30,9 +34,20 @@ class FilterMemberName( object ):
 
     @property
     def member_name( self ) -> str:
+        """
+        Gets the name of the scope member.
+        """
+
         return self._member_name
 
     def get_value( self, scope_item: Scope, **kwargs: Dict[ str, Any ] ) -> Any:
+        """
+        Gets the value of the scope member.
+        
+        Returns:
+            The value of the scope member.
+        """
+
         if hasattr( scope_item, self.member_name ):
             return getattr( scope_item, self.member_name )
         else:

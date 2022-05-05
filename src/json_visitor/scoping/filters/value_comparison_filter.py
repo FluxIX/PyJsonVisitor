@@ -12,6 +12,10 @@ except ImportError:
 from .value_filter import ValueFilter
 
 class ValueComparisonFilter( ValueFilter ):
+    """
+    Implements a filter which selects based on a scope member's evaluated value as compared to another value.
+    """
+
     def __init__( self, member_name: "FilterMemberName", comparison_source: Any ):
         super().__init__( member_name )
 
@@ -19,6 +23,10 @@ class ValueComparisonFilter( ValueFilter ):
 
     @property
     def comparison_value( self ) -> Any:
+        """
+        The value the scope member's evaluated value is compared to.
+        """
+
         return self._comparison_source
 
     def _internal_evaluate( self, scope_item: Scope, **kwargs: Dict[ str, Any ] ) -> bool:

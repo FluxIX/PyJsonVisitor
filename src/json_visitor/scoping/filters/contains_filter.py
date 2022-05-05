@@ -13,6 +13,10 @@ except ImportError:
 from .value_filter import ValueFilter
 
 class ContainsFilter( ValueFilter ):
+    """
+    Implements a filter which selects a scope of the scope's evaluated value contains at least one of a set of given values.
+    """
+
     def __init__( self, member_name: "FilterMemberName", *values: Iterable[ Any ], **kwargs: Dict[ str, Any ] ):
         super().__init__( member_name )
 

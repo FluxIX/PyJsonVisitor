@@ -10,6 +10,10 @@ except ImportError:
 from .value_comparison_filter import ValueComparisonFilter
 
 class GreaterThanFilter( ValueComparisonFilter ):
+    """
+    Implements a filter which selects a scope where the scope's evaluated value is greater than a literal value.
+    """
+
     def __init__( self, member_name: "FilterMemberName", comparison_source: Any ):
         super().__init__( member_name, comparison_source )
 

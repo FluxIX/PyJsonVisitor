@@ -3,6 +3,10 @@ __version__ = "1.0.0"
 from .base_filter import BaseFilter
 
 class NegationFilter( BaseFilter ):
+    """
+    Implements a filter which selects a scope whose evaluated value is `False`.
+    """
+
     def __init__( self, filter_: BaseFilter ):
         if filter is None:
             raise ValueError( "Filter cannot be None." )
@@ -11,6 +15,10 @@ class NegationFilter( BaseFilter ):
 
     @property
     def filter_( self ) -> BaseFilter:
+        """
+        Filter whose evalated value is negated.
+        """
+
         return self._filter
 
     def _internal_evaluate( self, scope_item, **kwargs ) -> bool:

@@ -61,13 +61,29 @@ class ComplexValueScope( ValueScope ):
 
     def set_value( self, value: Any, **kwargs: Dict[ str, Any ] ) -> None:
         """
-        Sets the evaluated value of the current scope.
+        Sets the value of the current scope to the given value.
+        
+        Parameters:
+            `value`: the value the current scope is being set to.
+
+        Returns:
+            None
         """
 
         scope_tree: Scope = self._get_scope_tree( value, **kwargs )
         self.set_child_scope( scope_tree )
 
     def set_child_scope( self, child_scope: Scope ) -> None:
+        """
+        Sets the current scope's value scope to the given value scope.
+        
+        Parameters:
+            `value_scope`: the value scope of the current scope is being set to.
+
+        Returns:
+            None
+        """
+
         # TODO: consider a method which examines the current child before replacing it.
 
         if self.has_child_scope:
