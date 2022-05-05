@@ -1,3 +1,5 @@
+__version__ = "1.0.0"
+
 from typing import Any, Dict, Iterable, Tuple
 
 from collections.abc import Iterable as Iterable_

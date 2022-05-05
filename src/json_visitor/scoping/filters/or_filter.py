@@ -1,3 +1,5 @@
+__version__ = "1.0.0"
+
 from .boolean_filter import BooleanFilter
 
 class OrFilter( BooleanFilter ):

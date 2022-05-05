@@ -1,3 +1,5 @@
+__version__ = "1.0.0"
+
 from .base_filter import BaseFilter
 
 class NegationFilter( BaseFilter ):
